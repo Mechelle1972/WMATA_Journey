@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WMATA Data Visualization | Participant Activities Workbook</title>
+<style>
+:root {
+  --navy:#003b52;
+  --navy2:#072f42;
+  --blue:#2f8fca;
+  --blue2:#1d6faa;
+  --orange:#f58220;
+  --ink:#183746;
+  --muted:#607681;
+  --line:#d7e4eb;
+  --paper:#ffffff;
+  --bg:#edf3f6;
+  --soft:#f5f8fa;
+  --softblue:#eaf4fb;
+  --softorange:#fff2e7;
+  --softgreen:#e9f6ed;
+  --green:#2f7d4b;
+  --red:#9f3c3c;
+  --purple:#6757b5;
+  --shadow:0 16px 40px rgba(0,59,82,.11);
+  --shadow2:0 7px 18px rgba(0,59,82,.08);
+  --excel:#217346;
+  --excelDark:#185c37;
+  --excelLight:#e8f3ec;
+  --copilot1:#5b5cf6;
+  --copilot2:#00a4ef;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+  radial-gradient(circle at 88% 8%,rgba(47,143,202,.09),transparent 24%),
+  radial-gradient(circle at 78% 34%,rgba(245,130,32,.055),transparent 20%),
+  linear-gradient(180deg,#edf3f6 0%,#f7fafc 56%,#edf3f6 100%);
+  font-family:Aptos,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.app{display:grid;grid-template-columns:286px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;overflow:auto;background:linear-gradient(180deg,var(--navy),var(--navy2));color:#fff;padding:20px 16px 24px}
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.brandmark{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--blue);font-size:21px;font-weight:900}
+.brand strong{display:block;letter-spacing:.045em;font-size:14px}
+.brand span{display:block;font-size:11px;opacity:.72;margin-top:3px}
+.progressbox{background:rgba(255,255,255,.08);padding:12px;border-radius:12px;margin:14px 0 18px}
+.progresstext{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px}
+.progress{height:7px;background:rgba(255,255,255,.15);border-radius:999px;overflow:hidden}
+.progress div{height:100%;background:var(--orange);width:0;transition:.2s}
+.navlabel{font-size:9px;text-transform:uppercase;letter-spacing:.15em;font-weight:900;opacity:.55;margin:16px 8px 6px}
+.nav{display:grid;gap:4px}
+.nav button{border:0;background:transparent;color:#dcebf1;text-align:left;padding:8px 9px;border-radius:8px;display:flex;gap:9px;align-items:flex-start;font-size:12px}
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.11);color:#fff}
+.nav .num{width:21px;height:21px;min-width:21px;border-radius:50%;border:1px solid rgba(255,255,255,.24);display:grid;place-items:center;font-size:9px}
+.sideactions{display:grid;gap:8px;margin-top:18px}
+.sideactions button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:8px;padding:9px;font-size:12px;font-weight:800}
+.sideactions button:hover{background:rgba(255,255,255,.08)}
+.main{min-width:0}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.autosave{font-size:12px;color:var(--muted)}
+.autosave strong{color:var(--green)}
+.topactions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}
+.btn:hover{border-color:#a6c5d5}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.orange{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn.danger{color:var(--red)}
+.content{max-width:1200px;margin:0 auto;padding:28px 28px 70px}
+.hero{position:relative;overflow:hidden;background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:30px;margin-bottom:22px}
+.hero:after{content:"";position:absolute;right:-100px;top:-125px;width:390px;height:390px;border-radius:50%;background:radial-gradient(circle,rgba(47,143,202,.18),rgba(245,130,32,.08) 45%,transparent 70%)}
+.eyebrow{position:relative;z-index:1;color:var(--orange);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.hero h1{position:relative;z-index:1;color:var(--navy);font-size:38px;line-height:1.03;margin:7px 0 8px}
+.hero p{position:relative;z-index:1;max-width:780px;font-size:16px;line-height:1.5;color:var(--muted);margin:0}
+.route{position:relative;z-index:1;margin:22px 0 4px;height:42px}
+.route:before{content:"";position:absolute;left:0;right:0;top:19px;height:5px;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--blue),var(--orange),var(--blue))}
+.stop{position:absolute;top:10px;width:23px;height:23px;border-radius:50%;background:#fff;border:5px solid var(--blue)}
+.stop:nth-child(2){left:24%} .stop:nth-child(3){left:49%;border-color:var(--orange)} .stop:nth-child(4){left:74%} .stop:nth-child(5){right:0}
+.profile{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:20px}
+label{display:block;color:var(--muted);font-size:11px;font-weight:900;margin-bottom:5px;letter-spacing:.02em}
+input[type=text],input[type=number],textarea,select{width:100%;border:1px solid #c9dbe5;background:#fff;color:var(--ink);border-radius:8px;padding:10px 11px;min-height:42px}
+textarea{min-height:104px;resize:vertical;line-height:1.42}
+input:focus,textarea:focus,select:focus,button:focus{outline:3px solid rgba(47,143,202,.20);outline-offset:1px;border-color:var(--blue)}
+.section{background:rgba(255,255,255,.98);border-radius:18px;box-shadow:var(--shadow);margin:22px 0;overflow:hidden;border:1px solid rgba(215,228,235,.75)}
+.sectionhead{padding:21px 24px 17px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:15px;position:relative;background:linear-gradient(90deg,#fff 0%,#fff 72%,#f6fbfe 100%)}
+.sectionhead:after{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,var(--blue) 0 72%,var(--orange) 72% 100%)}
+.secnum{width:43px;height:43px;min-width:43px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:900}
+.sectitle{flex:1;min-width:0}
+.meta{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--blue);font-weight:900;margin-bottom:4px}
+.sectitle h2{margin:0;color:var(--navy);font-size:24px}
+.sectitle p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.4}
+.done{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);white-space:nowrap;margin-left:auto}
+.done input{width:18px;height:18px}
+.sectionbody{padding:22px 24px 25px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff;box-shadow:var(--shadow2)}
+.card.soft{background:var(--soft)}
+.card h3{margin:0 0 7px;color:var(--navy);font-size:16px}
+.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.callout{border-left:5px solid var(--blue);background:var(--softblue);padding:14px 16px;border-radius:8px;margin-bottom:15px;line-height:1.45}
+.callout.orange{border-left-color:var(--orange);background:var(--softorange)}
+.callout.green{border-left-color:var(--green);background:var(--softgreen)}
+.callout strong{color:var(--navy)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 16px}
+.step{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px}
+.step .n{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font-size:11px;font-weight:900;margin-bottom:7px}
+.step strong{display:block;color:var(--navy);font-size:13px}
+.step span{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:3px}
+.response{font-size:13px;font-weight:900;color:var(--navy);margin:14px 0 6px}
+.small{font-size:12px;color:var(--muted)}
+.pill{display:inline-flex;border-radius:999px;background:var(--softblue);color:var(--blue2);padding:5px 9px;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.choicegrid{display:grid;gap:9px}
+.choice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff}
+.choice input{margin-top:3px;transform:scale(1.12)}
+.choice strong{color:var(--navy)}
+.feedback{display:none;margin-top:10px;border-radius:8px;padding:10px 12px;font-size:12px}
+.feedback.show{display:block}
+.feedback.good{background:var(--softgreen);color:#255f39}
+.feedback.bad{background:#fff0f0;color:#8d3131}
+.metricrow{display:grid;grid-template-columns:1fr auto;gap:8px}
+.stickyboard{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.sticky{position:relative;min-height:82px;padding:12px;border-radius:5px;border:1px solid #e7d88c;background:#fff8ca;box-shadow:0 5px 12px rgba(0,0,0,.05)}
+.sticky:nth-child(3n+2){background:#e8f5ff;border-color:#bedaea}
+.sticky:nth-child(3n+3){background:#fff0df;border-color:#ecc6a3}
+.sticky button{position:absolute;right:5px;top:4px;border:0;background:transparent;font-weight:900;color:#7b6c60}
+.scenariogrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.scenario{border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:13px}
+.scenario .area{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-weight:900}
+.scenario p{font-size:13px;line-height:1.42;margin:6px 0 10px}
+.scenario.correct{border-color:#aad2b6;background:var(--softgreen)}
+.scenario.incorrect{border-color:#e4b8b8;background:#fff1f1}
+.why{display:none;margin-top:8px;font-size:12px;line-height:1.35}
+.why.show{display:block}
+.databox{background:#071f2c;color:#eaf5fb;border-radius:10px;padding:14px;white-space:pre;overflow:auto;font:12px/1.5 Consolas,"Courier New",monospace}
+.prompt{background:var(--softblue);border:1px solid #c8dfed;border-radius:10px;padding:14px}
+.prompt code{display:block;white-space:pre-wrap;font:13px/1.5 Aptos,"Segoe UI",Arial,sans-serif;color:var(--navy)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.checklist{display:grid;gap:8px}
+.checkitem{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:10px}
+.checkitem input{margin-top:3px;transform:scale(1.12)}
+.chartbox{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px;min-height:225px}
+.charttitle{font-size:11px;color:var(--muted);font-weight:900;margin-bottom:3px}
+svg{display:block;max-width:100%;height:auto}
+.rubric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.scorerow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.scorerow label{margin:0}
+.scorerow input{display:none}
+.scorerow span{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;color:var(--muted);font-weight:900;cursor:pointer}
+.scorerow input:checked+span{background:var(--blue);border-color:var(--blue);color:#fff}
+.jobbox{background:linear-gradient(135deg,var(--navy),#075275);color:#fff;border-radius:18px;padding:24px;box-shadow:var(--shadow);margin-top:23px;position:relative;overflow:hidden}
+.jobbox:after{content:"";position:absolute;right:-40px;bottom:-100px;width:260px;height:260px;border:22px solid rgba(255,255,255,.06);border-radius:50%}
+.jobbox h2{margin:4px 0 7px;font-size:25px}
+.jobbox p{margin:0 0 15px;color:#dbeaf0;max-width:760px;line-height:1.5}
+.jobbox .btn{position:relative;z-index:1}
+.toast{position:fixed;right:22px;bottom:20px;z-index:40;background:var(--navy);color:#fff;border-radius:9px;padding:11px 14px;font-size:12px;opacity:0;transform:translateY(8px);transition:.2s}
+.toast.show{opacity:1;transform:none}
+
+.transit-ribbon{height:76px;margin:16px 0 0;position:relative;overflow:hidden;border-radius:13px;background:linear-gradient(180deg,#f8fbfd,#eef6fb);border:1px solid var(--line)}
+.transit-ribbon svg{width:100%;height:100%}
+.excel-window{border:1px solid #b9c9c1;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 28px rgba(25,92,55,.12);margin:14px 0}
+.excel-titlebar{height:34px;background:var(--excelDark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:11px}
+.excel-titlebar .xlbrand{display:flex;align-items:center;gap:7px;font-weight:800}
+.excel-titlebar .xlicon{width:20px;height:20px;border-radius:4px;background:#fff;color:var(--excelDark);display:grid;place-items:center;font-weight:900}
+.excel-controls{letter-spacing:.26em;opacity:.85}
+.excel-ribbon{background:#fff;border-bottom:1px solid #d9e2dd}
+.excel-tabs{height:28px;display:flex;align-items:end;gap:20px;padding:0 12px;font-size:10px;color:#4c5f55}
+.excel-tabs b{color:var(--excelDark);border-bottom:2px solid var(--excel);padding-bottom:6px}
+.excel-tools{height:42px;background:#fafcfb;display:flex;gap:10px;align-items:center;padding:6px 12px;border-top:1px solid #edf1ef}
+.excel-tool{width:36px;height:26px;border-radius:4px;background:#e9efec;position:relative}
+.excel-tool:after{content:"";position:absolute;left:7px;right:7px;top:6px;height:3px;background:#9aaba2;box-shadow:0 6px 0 #9aaba2,0 12px 0 #9aaba2}
+.formula-row{display:grid;grid-template-columns:74px 28px 1fr;align-items:center;border-bottom:1px solid #d9e2dd;background:#fff;height:31px;font-size:10px}
+.namebox{padding:0 8px;border-right:1px solid #d9e2dd;color:#5f7067}
+.fx{font-style:italic;text-align:center;color:#5f7067}
+.formulabox{padding:0 8px;color:#51645a}
+.sheet{overflow:auto;background:#fff}
+.sheet table{border-collapse:collapse;width:100%;min-width:660px;font-size:10px}
+.sheet th{background:#f3f5f4;color:#4c5f55;font-weight:600;border:1px solid #d8dfdb;padding:5px 7px;text-align:center}
+.sheet td{border:1px solid #d8dfdb;padding:6px 8px;color:#34483d;white-space:nowrap}
+.sheet td.rownum{background:#f3f5f4;text-align:center;color:#687a70;width:34px}
+.sheet td.bad{background:#fff0f0;color:#8e3131;font-weight:800}
+.sheet td.warn{background:#fff4d9;color:#785813;font-weight:800}
+.sheet td.good{background:#eaf5ee}
+.sheet td.sel{outline:2px solid var(--excel);outline-offset:-2px;background:#edf8f1}
+.sheet-tabs{height:31px;background:#f5f7f6;border-top:1px solid #d8dfdb;display:flex;align-items:center;padding:0 12px;gap:8px;font-size:10px}
+.sheet-tab{padding:6px 12px;background:#fff;border-bottom:2px solid var(--excel);color:var(--excelDark);font-weight:800}
+.pivot-layout{display:grid;grid-template-columns:minmax(0,1fr) 210px}
+.fields-pane{border-left:1px solid #d8dfdb;background:#fafcfb;padding:11px}
+.fields-pane h4{font-size:11px;margin:0 0 8px;color:#34483d}
+.field{display:flex;gap:6px;align-items:center;padding:4px 0;font-size:10px;color:#43564b}
+.field i{width:11px;height:11px;border:1px solid #9eaea5;border-radius:2px}
+.field-zone{margin-top:8px;border:1px solid #cdd9d2;border-radius:4px;background:#fff;padding:6px;min-height:42px;font-size:9px;color:#60736a}
+.field-zone strong{display:block;color:#385045;margin-bottom:3px}
+.chart-canvas{padding:16px 18px 18px;background:#fff}
+.chart-canvas h4{text-align:center;margin:0 0 9px;font-size:13px;color:#304a3d}
+.chart-canvas svg{width:100%;height:235px}
+.copilot-btn{border:0!important;color:#fff!important;background:linear-gradient(135deg,var(--copilot1),var(--copilot2) 58%,#00c2a8)!important;box-shadow:0 7px 18px rgba(77,92,240,.22);display:inline-flex;align-items:center;gap:8px}
+.copilot-btn:hover{transform:translateY(-1px);filter:saturate(1.08)}
+.copilot-icon{width:19px;height:19px;border-radius:7px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:11px;font-weight:900}
+.ai-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ai-strip .pill{margin:0}
+.activity-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:#f0f7fb;border:1px solid #d3e5ef;color:var(--navy);font-size:10px;font-weight:900}
+.activity-badge:before{content:"●";color:var(--orange);font-size:9px}
+
+@media(max-width:980px){
+ .app{grid-template-columns:1fr} .sidebar{position:relative;height:auto} .nav{grid-template-columns:repeat(2,1fr)}
+ .profile,.grid3,.steps,.rubric{grid-template-columns:1fr} .grid2,.scenariogrid{grid-template-columns:1fr}
+ .stickyboard{grid-template-columns:1fr 1fr} .topbar{position:relative}
+}
+@media(max-width:620px){
+ .content{padding:18px 14px 50px} .hero,.sectionhead,.sectionbody{padding-left:17px;padding-right:17px}
+ .hero h1{font-size:30px} .profile,.stickyboard,.nav{grid-template-columns:1fr}
+ .topbar{flex-direction:column;align-items:flex-start}
+}
+@media print{
+ .sidebar,.topbar,.done,.actions,.btn{display:none!important} body{background:#fff}
+ .app{display:block} .content{max-width:none;padding:0} .hero,.section,.jobbox{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark">C²</div><div><strong>DATA VISUALIZATION</strong><span>Participant Activities Workbook</span></div></div>
+  <div class="progressbox"><div class="progresstext"><span>Activity progress</span><strong id="progressText">0%</strong></div><div class="progress"><div id="progressBar"></div></div></div>
+  <div class="navlabel">Foundations</div>
+  <div class="nav">
+    <button data-target="a1"><span class="num">1</span><span>Performance Measures</span></button>
+    <button data-target="a2"><span class="num">2</span><span>The Anomaly</span></button>
+    <button data-target="a3"><span class="num">3</span><span>Sort the Scenarios</span></button>
+  </div>
+  <div class="navlabel">Data Quality</div>
+  <div class="nav">
+    <button data-target="demo25"><span class="num">25</span><span>Structured Data Demo</span></button>
+    <button data-target="a4"><span class="num">4</span><span>Cleaning the Data</span></button>
+    <button data-target="a5"><span class="num">5</span><span>Right Data?</span></button>
+  </div>
+  <div class="navlabel">Visualization</div>
+  <div class="nav">
+    <button data-target="a6"><span class="num">6</span><span>Match the Chart</span></button>
+    <button data-target="a7"><span class="num">7</span><span>Prepare the Data</span></button>
+    <button data-target="a8"><span class="num">8</span><span>Build the Chart</span></button>
+    <button data-target="a9"><span class="num">9</span><span>AI Second Opinion</span></button>
+  </div>
+  <div class="navlabel">Communicating Findings</div>
+  <div class="nav">
+    <button data-target="a10"><span class="num">10</span><span>Spot the Story</span></button>
+    <button data-target="a11"><span class="num">11</span><span>Find the Headline</span></button>
+    <button data-target="a12"><span class="num">12</span><span>AI Summarization</span></button>
+    <button data-target="a13"><span class="num">13</span><span>Trust, but Verify</span></button>
+    <button data-target="a14"><span class="num">14</span><span>Tailor the Message</span></button>
+    <button data-target="a15"><span class="num">15</span><span>Capstone Pitch</span></button>
+    <button data-target="a16"><span class="num">16</span><span>Constructive Review</span></button>
+  </div>
+  <div class="sideactions">
+    <button id="jobAidSide">Download My Job Aid</button>
+    <button id="responsesSide">Download My Responses</button>
+    <button id="printSide">Print / Save PDF</button>
+    <button id="resetSide">Reset Workbook</button>
+  </div>
+</aside>
+
+<main class="main">
+<div class="topbar">
+  <div class="autosave"><strong>Autosave is on.</strong> Your work stays in this browser.</div>
+  <div class="topactions"><button class="btn" id="copyAll">Copy My Responses</button><button class="btn orange" id="jobAidTop">Download Job Aid</button></div>
+</div>
+
+<div class="content">
+<section class="hero">
+  <div class="eyebrow">WMATA · Data Visualization</div>
+  <h1>Activities Workbook</h1>
+  <p>Use this workspace throughout the course. Complete activities, capture your thinking, copy safe AI prompts, and prepare your capstone. Your entries save automatically on this device.</p>
+  <div class="transit-ribbon" aria-hidden="true">
+    <svg viewBox="0 0 1000 120" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="railg" x1="0" x2="1"><stop offset="0" stop-color="#2f8fca"/><stop offset=".72" stop-color="#14699f"/><stop offset="1" stop-color="#f58220"/></linearGradient>
+      </defs>
+      <path d="M0 78 C180 25, 310 112, 490 65 S760 17,1000 61" fill="none" stroke="#d7e9f3" stroke-width="28" opacity=".85"/>
+      <path d="M0 78 C180 25, 310 112, 490 65 S760 17,1000 61" fill="none" stroke="url(#railg)" stroke-width="5"/>
+      <g fill="#fff" stroke="#2f8fca" stroke-width="5"><circle cx="130" cy="48" r="10"/><circle cx="365" cy="83" r="10"/><circle cx="610" cy="44" r="10"/></g>
+      <circle cx="835" cy="39" r="11" fill="#fff" stroke="#f58220" stroke-width="5"/>
+      <g transform="translate(742,46)">
+        <rect x="0" y="0" width="148" height="34" rx="14" fill="#fff" stroke="#1d6faa" stroke-width="3"/>
+        <path d="M25 8h88c11 0 18 7 18 15H19c0-8 2-15 6-15z" fill="#dceef8"/>
+        <rect x="28" y="10" width="23" height="11" rx="2" fill="#1d6faa"/><rect x="57" y="10" width="23" height="11" rx="2" fill="#1d6faa"/><rect x="86" y="10" width="23" height="11" rx="2" fill="#1d6faa"/>
+        <path d="M10 27h126" stroke="#f58220" stroke-width="4"/>
+        <circle cx="35" cy="34" r="5" fill="#173746"/><circle cx="112" cy="34" r="5" fill="#173746"/>
+      </g>
+    </svg>
+  </div>
+  <div class="profile">
+    <div><label for="name">Your Name</label><input id="name" type="text" data-save placeholder="Enter your name"></div>
+    <div><label for="role">Role / Department</label><input id="role" type="text" data-save placeholder="Your role or team"></div>
+    <div><label for="group">Group / Breakout Room</label><input id="group" type="text" data-save placeholder="Optional"></div>
+  </div>
+</section>
+
+<section class="section" id="a1">
+  <div class="sectionhead"><div class="secnum">1</div><div class="sectitle"><div class="meta">Slide 9 · Small Groups · 10 min</div><h2>Identifying Performance Measures</h2><p>Brainstorm 3–5 metrics your team relies on, then choose one to share.</p></div><label class="done"><input type="checkbox" data-complete="a1"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="steps"><div class="step"><div class="n">1</div><strong>Brainstorm</strong><span>Think about measures your team uses to know whether work is on track.</span></div><div class="step"><div class="n">2</div><strong>Capture</strong><span>Add one performance measure per note.</span></div><div class="step"><div class="n">3</div><strong>Share</strong><span>Choose one measure to discuss with the class.</span></div></div>
+    <div class="metricrow"><input id="metricInput" type="text" placeholder="Example: On-Time Performance"><button class="btn primary" id="addMetric">Add Metric</button></div>
+    <div class="stickyboard" id="metricBoard"></div>
+    <div class="grid2" style="margin-top:14px">
+      <div><label>What does your list suggest your team values most?</label><textarea id="a1_reflect" data-save></textarea></div>
+      <div><label>Metric your group will share</label><textarea id="a1_share" data-save></textarea></div>
+    </div>
+    <div class="callout" style="margin-top:14px"><strong>Common examples:</strong> On-Time Performance, Mean Distance Between Failures, Ridership Recovery, and Customer Incident Reports.</div>
+  </div>
+</section>
+
+<section class="section" id="a2">
+  <div class="sectionhead"><div class="secnum">2</div><div class="sectitle"><div class="meta">Slide 17 · Groups · 10 min</div><h2>The Anomaly: Connecting Findings to Actions</h2><p>Choose the most appropriate first step based only on the evidence provided.</p></div><label class="done"><input type="checkbox" data-complete="a2"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="callout orange"><strong>Analytic finding:</strong> Over the last three Tuesdays, there has been a 15% spike in delayed trains on the Green Line between 7:00 AM and 8:30 AM.</div>
+    <div class="choicegrid">
+      <label class="choice"><input type="radio" name="anomaly" value="1" data-save><div><strong>1.</strong> Dispatch additional track inspectors to the area prior to rush hour.</div></label>
+      <label class="choice"><input type="radio" name="anomaly" value="2" data-save><div><strong>2.</strong> Review station dwell times to see if passenger volumes are causing holds.</div></label>
+      <label class="choice"><input type="radio" name="anomaly" value="3" data-save><div><strong>3.</strong> Assess recent maintenance records for trains assigned to that line.</div></label>
+    </div>
+    <div class="response">Defend your choice. What does the evidence support, and what still needs investigation?</div>
+    <textarea id="a2_reason" data-save></textarea>
+  </div>
+</section>
+
+<section class="section" id="a3">
+  <div class="sectionhead"><div class="secnum">3</div><div class="sectitle"><div class="meta">Slide 20 · Breakout Teams · 10 min</div><h2>Sort the Scenarios</h2><p>Classify each scenario as Descriptive, Diagnostic, Predictive, or Prescriptive.</p></div><label class="done"><input type="checkbox" data-complete="a3"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="callout"><strong>Use these questions:</strong> Descriptive = What happened? Diagnostic = Why did it happen? Predictive = What is likely to happen? Prescriptive = What should we do?</div>
+    <div class="scenariogrid" id="scenarioGrid"></div>
+    <div class="actions"><button class="btn primary" id="checkScenarios">Check All</button><button class="btn" id="clearScenarios">Clear Sort</button></div>
+  </div>
+</section>
+
+<section class="section" id="demo25">
+  <div class="sectionhead"><div class="secnum">25</div><div class="sectitle"><div class="meta">Slide 25 · Instructor Demo · 5 min</div><h2>Structured Data in Action</h2><p>Follow the same maintenance information as it moves from free text into rows and fields.</p></div></div>
+  <div class="sectionbody">
+    <div class="callout orange"><strong>Follow along:</strong> You do not need to enter anything here. Watch how each maintenance note becomes one structured record with the same five fields.</div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>Free-text maintenance log</h3><p style="margin-bottom:10px">These notes contain useful information, but the values are buried inside sentences.</p><div class="databox" style="white-space:normal;line-height:1.55">On September 8, 2026, railcar 7005 had an HVAC failure at Shady Grove and was taken out of service pending parts.<br><br>On September 9, 2026, railcar 7042 had an intermittent door fault at Glenmont and was returned to service after the door controller was reset.<br><br>On September 10, 2026, railcar 7018 showed a brake warning at Greenbelt and was held for inspection.<br><br>On September 11, 2026, railcar 7061 had a propulsion fault at New Carrollton and was moved to the maintenance shop for diagnosis.<br><br>On September 12, 2026, railcar 7033 had a passenger information display failure at Vienna and remained in service with a repair scheduled.</div></div>
+      <div class="card"><h3>Structured version</h3><p style="margin-bottom:10px">The same information is separated into consistent fields.</p>
+        <div class="excel-window" aria-label="Structured maintenance data with Date, Railcar, Issue, Location, and Status columns">
+          <div class="excel-titlebar"><div class="xlbrand"><span class="xlicon">X</span>Structured Maintenance Log</div><div class="excel-controls">— □ ×</div></div>
+          <div class="sheet"><table style="min-width:780px">
+            <tr><th>Date</th><th>Railcar</th><th>Issue</th><th>Location</th><th>Status</th></tr>
+            <tr><td class="sel">September 8, 2026</td><td>7005</td><td>HVAC failure</td><td>Shady Grove</td><td>Taken out of service pending parts</td></tr>
+            <tr><td>September 9, 2026</td><td>7042</td><td>Intermittent door fault</td><td>Glenmont</td><td>Returned to service after door controller reset</td></tr>
+            <tr><td>September 10, 2026</td><td>7018</td><td>Brake warning</td><td>Greenbelt</td><td>Held for inspection</td></tr>
+            <tr><td>September 11, 2026</td><td>7061</td><td>Propulsion fault</td><td>New Carrollton</td><td>Moved to maintenance shop for diagnosis</td></tr>
+            <tr><td>September 12, 2026</td><td>7033</td><td>Passenger information display failure</td><td>Vienna</td><td>Remained in service; repair scheduled</td></tr>
+          </table></div>
+          <div class="sheet-tabs"><span class="sheet-tab">Structured Data</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="steps" style="margin-top:16px">
+      <div class="step"><div class="n">1</div><strong>One sentence</strong><span>Contains one maintenance event.</span></div>
+      <div class="step"><div class="n">2</div><strong>One row</strong><span>Becomes one record in the table.</span></div>
+      <div class="step"><div class="n">3</div><strong>Five fields</strong><span>Date, Railcar, Issue, Location, and Status make sorting and filtering possible.</span></div>
+    </div>
+    <div class="callout green"><strong>Key point:</strong> Structure does not change the event. It separates the information into consistent fields so people and tools can analyze it.</div>
+  </div>
+</section>
+
+<section class="section" id="a4">
+  <div class="sectionhead"><div class="secnum">4</div><div class="sectitle"><div class="meta">Slide 28 · Excel · 10 min</div><h2>Practice: Cleaning the Data</h2><p>Use Excel to find obvious data-quality problems before you visualize.</p></div><label class="done"><input type="checkbox" data-complete="a4"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="callout orange"><strong>Training file:</strong> Download the safe practice dataset below. It contains intentional problems for this exercise.</div>
+    <div class="actions"><button class="btn primary" id="downloadPractice">Download Practice Dataset (.csv)</button></div>
+    <div class="excel-window" aria-label="Example Excel worksheet containing a blank cell, duplicate row, and outlier">
+      <div class="excel-titlebar"><div class="xlbrand"><span class="xlicon">X</span>Data_Visualization_Practice.xlsx</div><div class="excel-controls">— □ ×</div></div>
+      <div class="excel-ribbon"><div class="excel-tabs"><b>Home</b><span>Insert</span><span>Page Layout</span><span>Formulas</span><span>Data</span><span>Review</span><span>View</span></div><div class="excel-tools"><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div></div></div>
+      <div class="formula-row"><div class="namebox">D4</div><div class="fx">fx</div><div class="formulabox"></div></div>
+      <div class="sheet"><table>
+        <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+        <tr><td class="rownum">1</td><td><b>Trip_ID</b></td><td><b>Route</b></td><td><b>Station</b></td><td><b>Travel_Minutes</b></td><td><b>Boardings</b></td><td><b>Service_Date</b></td></tr>
+        <tr><td class="rownum">2</td><td>1001</td><td>Red</td><td>Metro Center</td><td>18</td><td>143</td><td>6/2/2026</td></tr>
+        <tr><td class="rownum">3</td><td>1002</td><td>Red</td><td>Gallery Place</td><td>21</td><td>156</td><td>6/2/2026</td></tr>
+        <tr><td class="rownum">4</td><td>1003</td><td>Green</td><td>Navy Yard</td><td class="bad sel">&nbsp;</td><td>132</td><td>6/2/2026</td></tr>
+        <tr><td class="rownum">5</td><td class="warn">1004</td><td class="warn">Yellow</td><td class="warn">L'Enfant Plaza</td><td class="warn">17</td><td class="warn">118</td><td class="warn">6/2/2026</td></tr>
+        <tr><td class="rownum">6</td><td class="warn">1004</td><td class="warn">Yellow</td><td class="warn">L'Enfant Plaza</td><td class="warn">17</td><td class="warn">118</td><td class="warn">6/2/2026</td></tr>
+        <tr><td class="rownum">7</td><td>1005</td><td>Blue</td><td>Foggy Bottom</td><td class="bad">999</td><td>97</td><td>6/2/2026</td></tr>
+      </table></div>
+      <div class="sheet-tabs"><span class="sheet-tab">Practice Data</span><span>＋</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><strong>Filters</strong><span>Find blank cells.</span></div>
+      <div class="step"><div class="n">2</div><strong>Conditional Formatting</strong><span>Highlight duplicate rows.</span></div>
+      <div class="step"><div class="n">3</div><strong>Sort</strong><span>Find obvious outliers.</span></div>
+    </div>
+    <div class="checklist">
+      <label class="checkitem"><input id="a4_blank" type="checkbox" data-save><span>I identified the blank value.</span></label>
+      <label class="checkitem"><input id="a4_dup" type="checkbox" data-save><span>I identified the duplicate record.</span></label>
+      <label class="checkitem"><input id="a4_outlier" type="checkbox" data-save><span>I identified the unrealistic travel-time outlier.</span></label>
+    </div>
+    <div class="response">What did you find first?</div><textarea id="a4_notes" data-save></textarea>
+    <div class="prompt" style="margin-top:14px"><span class="pill">Optional AI Assist</span><code id="qualityPrompt">Describe only the columns, not real values: “What data quality checks would you run on a dataset like this, and what formulas or Excel features would you use?”</code><div class="actions"><button class="btn" data-copy="qualityPrompt">Copy Prompt</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+  </div>
+</section>
+
+<section class="section" id="a5">
+  <div class="sectionhead"><div class="secnum">5</div><div class="sectitle"><div class="meta">Slide 30 · Group Exercise · 10 min</div><h2>Is This the Right Data?</h2><p>Decide which questions the dataset can answer accurately.</p></div><label class="done"><input type="checkbox" data-complete="a5"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="callout orange"><strong>Dataset:</strong> Monthly summary of track maintenance work orders closed by division.</div>
+    <div class="choicegrid">
+      <label class="choice"><input id="q1" type="checkbox" data-save><div><strong>1.</strong> Which division closed the most work orders?</div></label>
+      <label class="choice"><input id="q2" type="checkbox" data-save><div><strong>2.</strong> How long does it take to resolve a track circuit failure?</div></label>
+      <label class="choice"><input id="q3" type="checkbox" data-save><div><strong>3.</strong> Did weekend track work impact ridership?</div></label>
+    </div>
+    <div class="response">Why can the dataset answer some questions but not others?</div><textarea id="a5_reason" data-save></textarea>
+    <div class="actions"><button class="btn primary" id="checkRightData">Check My Choices</button></div>
+    <div class="feedback" id="rightDataFeedback"></div>
+  </div>
+</section>
+
+<section class="section" id="a6">
+  <div class="sectionhead"><div class="secnum">6</div><div class="sectitle"><div class="meta">Slide 34 · Group Exercise · 10 min</div><h2>Match the Message to the Chart</h2><p>Choose the visualization that best matches each message.</p></div><label class="done"><input type="checkbox" data-complete="a6"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="grid3">
+      <div class="card"><h3>Trend</h3><p>Showing how on-time performance has changed over the last 12 months.</p><label style="margin-top:10px">Which chart?</label><select id="chart1" data-save><option value="">Choose</option><option>Bar Chart</option><option>Line Chart</option><option>Scatter Plot</option></select></div>
+      <div class="card"><h3>Comparison</h3><p>Comparing total safety incidents across five bus garages.</p><label style="margin-top:10px">Which chart?</label><select id="chart2" data-save><option value="">Choose</option><option>Bar Chart</option><option>Line Chart</option><option>Scatter Plot</option></select></div>
+      <div class="card"><h3>Correlation</h3><p>Showing whether higher overtime hours correlate with an increase in operator errors.</p><label style="margin-top:10px">Which chart?</label><select id="chart3" data-save><option value="">Choose</option><option>Bar Chart</option><option>Line Chart</option><option>Scatter Plot</option></select></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="checkCharts">Check Answers</button></div>
+    <div class="feedback" id="chartFeedback"></div>
+  </div>
+</section>
+
+<section class="section" id="a7">
+  <div class="sectionhead"><div class="secnum">7</div><div class="sectitle"><div class="meta">Slide 35 · Guided Practice · 15 min</div><h2>Preparing Data for Visualization</h2><p>Build a PivotTable that summarizes Total Entries by Station.</p></div><label class="done"><input type="checkbox" data-complete="a7"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="steps"><div class="step"><div class="n">1</div><strong>Select</strong><span>Select the cleaned dataset.</span></div><div class="step"><div class="n">2</div><strong>Insert</strong><span>Insert a PivotTable.</span></div><div class="step"><div class="n">3</div><strong>Build</strong><span>Station → Rows. Entries → Values.</span></div></div>
+    <div class="callout"><strong>Goal:</strong> A simple summary showing Total Entries by Station.</div>
+    <div class="excel-window" aria-label="Example Excel PivotTable setup">
+      <div class="excel-titlebar"><div class="xlbrand"><span class="xlicon">X</span>Ridership_Practice.xlsx</div><div class="excel-controls">— □ ×</div></div>
+      <div class="excel-ribbon"><div class="excel-tabs"><span>Home</span><b>PivotTable Analyze</b><span>Design</span></div><div class="excel-tools"><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div></div></div>
+      <div class="pivot-layout">
+        <div>
+          <div class="formula-row"><div class="namebox">A3</div><div class="fx">fx</div><div class="formulabox">Metro Center</div></div>
+          <div class="sheet"><table style="min-width:430px">
+            <tr><th></th><th>A</th><th>B</th></tr>
+            <tr><td class="rownum">1</td><td class="good"><b>Row Labels</b></td><td class="good"><b>Sum of Entries</b></td></tr>
+            <tr><td class="rownum">2</td><td>Gallery Place</td><td>21,484</td></tr>
+            <tr><td class="rownum">3</td><td class="sel">Metro Center</td><td>28,799</td></tr>
+            <tr><td class="rownum">4</td><td>Navy Yard</td><td>19,278</td></tr>
+            <tr><td class="rownum">5</td><td>L'Enfant Plaza</td><td>23,907</td></tr>
+            <tr><td class="rownum">6</td><td class="good"><b>Grand Total</b></td><td class="good"><b>93,468</b></td></tr>
+          </table></div>
+        </div>
+        <div class="fields-pane"><h4>PivotTable Fields</h4><div class="field"><i></i>Date</div><div class="field"><i style="background:#217346"></i>Station</div><div class="field"><i style="background:#217346"></i>Entries</div><div class="field"><i></i>Line</div>
+          <div class="field-zone"><strong>ROWS</strong>Station</div><div class="field-zone"><strong>VALUES</strong>Sum of Entries</div>
+        </div>
+      </div>
+      <div class="sheet-tabs"><span class="sheet-tab">PivotTable</span><span>Practice Data</span></div>
+    </div>
+    <label>What does your PivotTable reveal?</label><textarea id="a7_notes" data-save placeholder="Capture the pattern or comparison that stands out..."></textarea>
+    <div class="prompt" style="margin-top:14px"><span class="pill">Optional AI Assist</span><code id="pivotPrompt">How do I summarize total entries by station with a PivotTable? Give me the steps, but do not assume the output is correct until I verify it.</code><div class="actions"><button class="btn" data-copy="pivotPrompt">Copy Prompt</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+  </div>
+</section>
+
+<section class="section" id="a8">
+  <div class="sectionhead"><div class="secnum">8</div><div class="sectitle"><div class="meta">Slide 36 · Excel · 15 min</div><h2>Inserting the Chart</h2><p>Turn your PivotTable into a clear bar chart.</p></div><label class="done"><input type="checkbox" data-complete="a8"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="excel-window" aria-label="Example cleaned bar chart in Excel">
+      <div class="excel-titlebar"><div class="xlbrand"><span class="xlicon">X</span>Ridership_Practice.xlsx</div><div class="excel-controls">— □ ×</div></div>
+      <div class="excel-ribbon"><div class="excel-tabs"><span>Home</span><span>Insert</span><b>Chart Design</b><span>Format</span></div><div class="excel-tools"><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div><div class="excel-tool"></div></div></div>
+      <div class="chart-canvas"><h4>Daily Entries by Station</h4>
+        <svg viewBox="0 0 620 235" role="img" aria-label="Horizontal bar chart showing Metro Center with the highest daily entries">
+          <g stroke="#dce4e8" stroke-width="1"><line x1="140" y1="30" x2="140" y2="205"/><line x1="250" y1="30" x2="250" y2="205"/><line x1="360" y1="30" x2="360" y2="205"/><line x1="470" y1="30" x2="470" y2="205"/><line x1="580" y1="30" x2="580" y2="205"/></g>
+          <g font-size="12" fill="#4e6470"><text x="130" y="58" text-anchor="end">Gallery Place</text><text x="130" y="101" text-anchor="end">Metro Center</text><text x="130" y="144" text-anchor="end">Navy Yard</text><text x="130" y="187" text-anchor="end">L'Enfant Plaza</text></g>
+          <rect x="140" y="42" width="315" height="24" rx="3" fill="#6caed7"/><rect x="140" y="85" width="422" height="24" rx="3" fill="#f58220"/><rect x="140" y="128" width="282" height="24" rx="3" fill="#6caed7"/><rect x="140" y="171" width="350" height="24" rx="3" fill="#6caed7"/>
+          <g font-size="11" fill="#173746" font-weight="700"><text x="463" y="59">21,484</text><text x="570" y="102">28,799</text><text x="430" y="145">19,278</text><text x="498" y="188">23,907</text></g>
+        </svg>
+      </div>
+      <div class="sheet-tabs"><span class="sheet-tab">Chart</span><span>PivotTable</span><span>Practice Data</span></div>
+    </div>
+    <div class="checklist">
+      <label class="checkitem"><input id="a8_1" type="checkbox" data-save><span>Select the PivotTable summary.</span></label>
+      <label class="checkitem"><input id="a8_2" type="checkbox" data-save><span>Insert a Bar Chart.</span></label>
+      <label class="checkitem"><input id="a8_3" type="checkbox" data-save><span>Remove redundant legends and unnecessary gridlines.</span></label>
+      <label class="checkitem"><input id="a8_4" type="checkbox" data-save><span>Replace “Sum of Entries” with a meaningful title such as “Daily Entries by Station.”</span></label>
+    </div>
+    <div class="response">What do you want the audience to notice first?</div><textarea id="a8_takeaway" data-save></textarea>
+  </div>
+</section>
+
+<section class="section" id="a9">
+  <div class="sectionhead"><div class="secnum">9</div><div class="sectitle"><div class="meta">Slide 37 · Optional AI Assist</div><h2>A Second Opinion on Your Chart</h2><p>Ask AI for a recommendation, then judge the recommendation yourself.</p></div><label class="done"><input type="checkbox" data-complete="a9"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="ai-strip"><span class="activity-badge">AI Assist</span><span class="small">Copy the prompt, then open your approved Microsoft 365 Copilot Chat.</span></div>
+    <div class="prompt"><span class="pill">Copy-ready prompt</span><code id="chartPrompt">I have a summary table of total daily entries by station. My goal is to show leadership which stations carry the most riders. What visualization would you recommend, and why?</code><div class="actions"><button class="btn" data-copy="chartPrompt">Copy Prompt</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+    <div class="grid2" style="margin-top:14px">
+      <div><label>AI recommendation</label><textarea id="a9_ai" data-save></textarea></div>
+      <div><label>Your judgment</label><textarea id="a9_judge" data-save placeholder="Does the recommendation fit the message and audience?"></textarea></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="a10">
+  <div class="sectionhead"><div class="secnum">10</div><div class="sectitle"><div class="meta">Slide 42 · Individual Exercise · 15 min</div><h2>Spotting the Story in the Data</h2><p>Review each chart and write one key observation.</p></div><label class="done"><input type="checkbox" data-complete="a10"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="grid3">
+      <div class="card">
+        <h3>1 · Trends</h3>
+        <div class="chartbox"><div class="charttitle">Monthly Sales Performance · Sales ($K)</div>
+          <svg viewBox="0 0 300 190" aria-label="Line chart showing sales increasing from January to June">
+            <line x1="42" y1="155" x2="282" y2="155" stroke="#9fb3bf"/><line x1="42" y1="22" x2="42" y2="155" stroke="#9fb3bf"/>
+            <polyline points="42,121 90,113 138,95 186,75 234,58 282,31" fill="none" stroke="#2f8fca" stroke-width="4"/>
+            <g fill="#2f8fca"><circle cx="42" cy="121" r="5"/><circle cx="90" cy="113" r="5"/><circle cx="138" cy="95" r="5"/><circle cx="186" cy="75" r="5"/><circle cx="234" cy="58" r="5"/><circle cx="282" cy="31" r="5"/></g>
+            <g font-size="10" fill="#607681"><text x="42" y="172" text-anchor="middle">Jan</text><text x="90" y="172" text-anchor="middle">Feb</text><text x="138" y="172" text-anchor="middle">Mar</text><text x="186" y="172" text-anchor="middle">Apr</text><text x="234" y="172" text-anchor="middle">May</text><text x="282" y="172" text-anchor="middle">Jun</text></g>
+          </svg>
+        </div>
+        <label style="margin-top:10px">One key observation</label><textarea id="a10_trend" data-save></textarea>
+      </div>
+      <div class="card">
+        <h3>2 · Comparisons</h3>
+        <div class="chartbox"><div class="charttitle">Regional Revenue Comparison · Revenue ($K)</div>
+          <svg viewBox="0 0 300 190" aria-label="Bar chart showing Region B with the highest revenue">
+            <line x1="40" y1="155" x2="280" y2="155" stroke="#9fb3bf"/>
+            <rect x="65" y="92" width="48" height="63" fill="#2f8fca"/><rect x="135" y="43" width="48" height="112" fill="#f58220"/><rect x="205" y="85" width="48" height="70" fill="#26847f"/>
+            <g font-size="10" fill="#607681"><text x="89" y="171" text-anchor="middle">Region A</text><text x="159" y="171" text-anchor="middle">Region B</text><text x="229" y="171" text-anchor="middle">Region C</text></g>
+          </svg>
+        </div>
+        <label style="margin-top:10px">One key observation</label><textarea id="a10_compare" data-save></textarea>
+      </div>
+      <div class="card">
+        <h3>3 · Outliers</h3>
+        <div class="chartbox"><div class="charttitle">Order Delivery Time · Days</div>
+          <svg viewBox="0 0 300 190" aria-label="Scatter plot with one high outlier">
+            <line x1="38" y1="155" x2="282" y2="155" stroke="#9fb3bf"/><line x1="38" y1="22" x2="38" y2="155" stroke="#9fb3bf"/>
+            <g fill="#6757b5"><circle cx="55" cy="126" r="4"/><circle cx="72" cy="121" r="4"/><circle cx="88" cy="127" r="4"/><circle cx="105" cy="116" r="4"/><circle cx="120" cy="111" r="4"/><circle cx="138" cy="131" r="4"/><circle cx="155" cy="120" r="4"/><circle cx="172" cy="126" r="4"/><circle cx="190" cy="118" r="4"/><circle cx="208" cy="112" r="4"/><circle cx="225" cy="124" r="4"/><circle cx="242" cy="119" r="4"/></g>
+            <circle cx="250" cy="43" r="6" fill="#f58220"/>
+          </svg>
+        </div>
+        <label style="margin-top:10px">One key observation</label><textarea id="a10_outlier" data-save></textarea>
+      </div>
+    </div>
+    <div class="prompt" style="margin-top:14px"><span class="pill">Optional AI Assist</span><code id="storyPrompt">What trends, anomalies, or questions worth exploring do you see in this data? Keep your observations grounded in the values provided and identify anything you are uncertain about.</code><div class="actions"><button class="btn" data-copy="storyPrompt">Copy Prompt</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+  </div>
+</section>
+
+<section class="section" id="a11">
+  <div class="sectionhead"><div class="secnum">11</div><div class="sectitle"><div class="meta">Slide 44 · Groups · 10 min</div><h2>Finding the Headline</h2><p>Pass the 10-second test: distill a dashboard into one clear sentence.</p></div><label class="done"><input type="checkbox" data-complete="a11"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="callout"><strong>The 10-second test:</strong> “If you had only 10 seconds to present this dashboard to the General Manager, what is the single sentence you would say?”</div>
+    <label>Your group’s one-sentence headline</label><textarea id="a11_headline" data-save maxlength="350"></textarea>
+    <div class="grid2" style="margin-top:14px"><div class="card soft"><h3>Too vague</h3><p>“Ridership is changing.”</p></div><div class="card" style="background:var(--softgreen)"><h3>Effective</h3><p>“Ridership on weekends has surpassed pre-pandemic levels.”</p></div></div>
+  </div>
+</section>
+
+<section class="section" id="a12">
+  <div class="sectionhead"><div class="secnum">12</div><div class="sectitle"><div class="meta">Slide 45 · AI Tool · 10 min</div><h2>AI Summarization</h2><p>Use a bounded prompt with safe training data, then refine it if needed.</p></div><label class="done"><input type="checkbox" data-complete="a12"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="ai-strip"><span class="activity-badge">AI Practice</span><span class="small">Use the copy buttons below, then open Microsoft 365 Copilot Chat.</span></div>
+    <div class="callout orange"><strong>Training-only data:</strong> The dataset below is synthetic and included only for this course activity.</div>
+    <div class="prompt"><span class="pill">Sample Prompt</span><code id="summaryPrompt">Act as a transit analyst. Review the following anonymized monthly delay dataset. Identify the top 3 recurring causes of delays and summarize the overall trend in one short paragraph suitable for an executive summary.</code><div class="actions"><button class="btn" data-copy="summaryPrompt">Copy Prompt</button><button class="btn" id="copySummaryData">Copy Dataset</button><button class="btn primary" id="copyPromptData">Copy Prompt + Dataset</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+    <div class="databox" id="summaryData">Month,Cause,Delay_Incidents
+Jan,Signal,18
+Jan,Door,14
+Jan,Track,10
+Jan,Passenger,8
+Jan,Weather,4
+Feb,Signal,20
+Feb,Door,13
+Feb,Track,11
+Feb,Passenger,9
+Feb,Weather,22
+Mar,Signal,19
+Mar,Door,15
+Mar,Track,12
+Mar,Passenger,10
+Mar,Weather,5
+Apr,Signal,23
+Apr,Door,17
+Apr,Track,11
+Apr,Passenger,9
+Apr,Weather,3
+May,Signal,24
+May,Door,18
+May,Track,13
+May,Passenger,11
+May,Weather,2
+Jun,Signal,27
+Jun,Door,19
+Jun,Track,15
+Jun,Passenger,12
+Jun,Weather,2</div>
+    <div class="grid2" style="margin-top:14px">
+      <div><label>First AI response</label><textarea id="a12_first" data-save></textarea></div>
+      <div><label>Refined prompt or improved response</label><textarea id="a12_refined" data-save placeholder="What did you change: audience, format, scope, or another constraint?"></textarea></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="a13">
+  <div class="sectionhead"><div class="secnum">13</div><div class="sectitle"><div class="meta">Slide 46 · Discussion · 10 min</div><h2>Trust, but Verify</h2><p>Compare the AI interpretation against the source data before using it.</p></div><label class="done"><input type="checkbox" data-complete="a13"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="grid3">
+      <div><label>What did AI get right?</label><textarea id="a13_right" data-save></textarea></div>
+      <div><label>What needs correction?</label><textarea id="a13_wrong" data-save placeholder="Unsupported cause? Wrong ranking? Overstatement?"></textarea></div>
+      <div><label>What context is missing?</label><textarea id="a13_context" data-save placeholder="Weather, planned work, policy, local operational knowledge..."></textarea></div>
+    </div>
+    <div class="callout orange" style="margin-top:14px"><strong>Context is your job.</strong> AI may identify a spike in the data without knowing what happened operationally that week.</div>
+  </div>
+</section>
+
+<section class="section" id="a14">
+  <div class="sectionhead"><div class="secnum">14</div><div class="sectitle"><div class="meta">Slide 47 · AI Tool · 10 min</div><h2>Tailoring the Message</h2><p>Rewrite a technical finding for a non-technical audience without changing its meaning.</p></div><label class="done"><input type="checkbox" data-complete="a14"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="ai-strip"><span class="activity-badge">AI Practice</span><span class="small">Use Copilot to rewrite, then verify every number and meaning.</span></div>
+    <div class="callout"><strong>Original technical finding:</strong> “A 14% degradation in MDBF for the 7000-series fleet was observed in Q2, highly correlated with HVAC subsystem anomalies, prompting a review of preventive maintenance intervals.”</div>
+    <div class="prompt"><code id="rewritePrompt">Rewrite this technical finding as a brief, clear executive summary for a non-technical audience. Preserve every number and do not add a cause, recommendation, or certainty that is not in the original.</code><div class="actions"><button class="btn" data-copy="rewritePrompt">Copy Prompt</button><a class="btn copilot-btn" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="copilot-icon">AI</span>Open Copilot</a></div></div>
+    <div class="grid2" style="margin-top:14px">
+      <div><label>AI rewrite</label><textarea id="a14_ai" data-save></textarea></div>
+      <div><label>Your final verified version</label><textarea id="a14_final" data-save></textarea></div>
+    </div>
+    <label style="margin-top:12px">Verification notes: Did any number, meaning, or level of certainty change?</label><textarea id="a14_verify" data-save></textarea>
+  </div>
+</section>
+
+<section class="section" id="a15">
+  <div class="sectionhead"><div class="secnum">15</div><div class="sectitle"><div class="meta">Slide 48 · Capstone · Pairs · 10 min</div><h2>Pitching Your Finding</h2><p>Combine the finding, supporting evidence, and recommended action into a decision-ready pitch.</p></div><label class="done"><input type="checkbox" data-complete="a15"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="grid3">
+      <div><label>1 · Finding</label><textarea id="a15_finding" data-save placeholder="What is the one thing your audience needs to know?"></textarea></div>
+      <div><label>2 · Supporting data / visual</label><textarea id="a15_evidence" data-save placeholder="What evidence supports the finding?"></textarea></div>
+      <div><label>3 · Recommended action</label><textarea id="a15_action" data-save placeholder="What specific next step are you asking for?"></textarea></div>
+    </div>
+    <label style="margin-top:14px">Your 2-minute pitch outline</label><textarea id="a15_pitch" data-save style="min-height:150px"></textarea>
+    <div class="callout green" style="margin-top:14px"><strong>Focus on:</strong> clarity of the message, relevance of the data, and actionability of the recommendation.</div>
+  </div>
+</section>
+
+<section class="section" id="a16">
+  <div class="sectionhead"><div class="secnum">16</div><div class="sectitle"><div class="meta">Slide 49 · Peer Review · 10 min</div><h2>Constructive Review</h2><p>Give your partner specific feedback on clarity, visuals, and actionability.</p></div><label class="done"><input type="checkbox" data-complete="a16"> Complete</label></div>
+  <div class="sectionbody">
+    <div class="grid2" style="margin-bottom:14px"><div><label>Partner / Presenter Name</label><input id="a16_partner" type="text" data-save></div><div><label>Pitch Topic</label><input id="a16_topic" type="text" data-save></div></div>
+    <div class="rubric">
+      <div class="card"><h3>Clarity</h3><p>Was the main finding obvious immediately?</p><div class="scorerow"><label><input type="radio" name="clarityScore" value="1" data-save><span>1</span></label><label><input type="radio" name="clarityScore" value="2" data-save><span>2</span></label><label><input type="radio" name="clarityScore" value="3" data-save><span>3</span></label><label><input type="radio" name="clarityScore" value="4" data-save><span>4</span></label><label><input type="radio" name="clarityScore" value="5" data-save><span>5</span></label></div><label>Feedback</label><textarea id="a16_clarity" data-save></textarea></div>
+      <div class="card"><h3>Visuals</h3><p>Did the chart support the message or distract from it?</p><div class="scorerow"><label><input type="radio" name="visualScore" value="1" data-save><span>1</span></label><label><input type="radio" name="visualScore" value="2" data-save><span>2</span></label><label><input type="radio" name="visualScore" value="3" data-save><span>3</span></label><label><input type="radio" name="visualScore" value="4" data-save><span>4</span></label><label><input type="radio" name="visualScore" value="5" data-save><span>5</span></label></div><label>Feedback</label><textarea id="a16_visuals" data-save></textarea></div>
+      <div class="card"><h3>Actionability</h3><p>Did the presenter ask for a specific, data-backed decision?</p><div class="scorerow"><label><input type="radio" name="actionScore" value="1" data-save><span>1</span></label><label><input type="radio" name="actionScore" value="2" data-save><span>2</span></label><label><input type="radio" name="actionScore" value="3" data-save><span>3</span></label><label><input type="radio" name="actionScore" value="4" data-save><span>4</span></label><label><input type="radio" name="actionScore" value="5" data-save><span>5</span></label></div><label>Feedback</label><textarea id="a16_action" data-save></textarea></div>
+    </div>
+    <label style="margin-top:14px">Strongest part of the pitch</label><textarea id="a16_best" data-save></textarea>
+    <label style="margin-top:10px">One change that would make it stronger</label><textarea id="a16_change" data-save></textarea>
+  </div>
+</section>
+
+<section class="jobbox">
+  <div class="eyebrow" style="color:#ffb36f">Take It With You</div>
+  <h2>Build Your Personal Data Visualization Job Aid</h2>
+  <p>Your downloadable job aid combines a concise course reference with your own saved takeaways, chart rules, AI prompts, capstone notes, and peer feedback. Save it before you leave the course.</p>
+  <div class="actions"><button class="btn orange" id="jobAidBottom">Download My Job Aid</button><button class="btn" id="responsesBottom">Download My Responses</button></div>
+</section>
+</div>
+</main>
+</div>
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const KEY='wmata_data_visualization_participant_workbook_v4';
+const scenarios=[{"id": "S1", "area": "Bus Operations", "text": "A monthly dashboard shows that Route 70 had 18% more late trips in July than in June.", "answer": "descriptive", "why": "It summarizes what happened."}, {"id": "S2", "area": "Maintenance", "text": "Analysts compare work orders, vehicle age, and failure codes to determine why one fleet group experienced more road calls last quarter.", "answer": "diagnostic", "why": "It investigates why an observed problem occurred."}, {"id": "S3", "area": "Customer Experience", "text": "Based on complaint trends and planned service changes, the team estimates that wayfinding questions will rise during a major event next month.", "answer": "predictive", "why": "It estimates what is likely to happen."}, {"id": "S4", "area": "Rail Operations", "text": "After reviewing expected ridership and past crowding, the analysis recommends adding platform staff at two stations during the evening peak.", "answer": "prescriptive", "why": "It recommends what action should be taken."}, {"id": "S5", "area": "Finance", "text": "A quarterly report compares overtime spending by department with budget targets.", "answer": "descriptive", "why": "It reports current and historical performance."}, {"id": "S6", "area": "Workforce Planning", "text": "The team examines vacancy rates, training completion, shift coverage, and retirements to understand why one work unit has persistent staffing gaps.", "answer": "diagnostic", "why": "It searches for causes behind an existing condition."}, {"id": "S7", "area": "Capital Planning", "text": "Using asset condition scores and historical failure rates, planners estimate which escalators are most likely to require major repair within the next year.", "answer": "predictive", "why": "It forecasts a future condition."}, {"id": "S8", "area": "Service Planning", "text": "A model compares schedule options and recommends the one expected to reduce passenger wait time while staying within available operator hours.", "answer": "prescriptive", "why": "It evaluates options and recommends an action."}];
+const practiceCSV="Trip_ID,Route,Station,Travel_Minutes,Boardings,Service_Date\n1001,Red,Metro Center,18,143,2026-06-02\n1002,Red,Gallery Place,21,156,2026-06-02\n1003,Green,Navy Yard,,132,2026-06-02\n1004,Yellow,L'Enfant Plaza,17,118,2026-06-02\n1004,Yellow,L'Enfant Plaza,17,118,2026-06-02\n1005,Blue,Foggy Bottom,999,97,2026-06-02\n1006,Orange,Metro Center,20,151,2026-06-03\n1007,Silver,McPherson Square,19,124,2026-06-03\n1008,Green,Navy Yard,23,139,2026-06-03";
+const summaryCSV="Month,Cause,Delay_Incidents\nJan,Signal,18\nJan,Door,14\nJan,Track,10\nJan,Passenger,8\nJan,Weather,4\nFeb,Signal,20\nFeb,Door,13\nFeb,Track,11\nFeb,Passenger,9\nFeb,Weather,22\nMar,Signal,19\nMar,Door,15\nMar,Track,12\nMar,Passenger,10\nMar,Weather,5\nApr,Signal,23\nApr,Door,17\nApr,Track,11\nApr,Passenger,9\nApr,Weather,3\nMay,Signal,24\nMay,Door,18\nMay,Track,13\nMay,Passenger,11\nMay,Weather,2\nJun,Signal,27\nJun,Door,19\nJun,Track,15\nJun,Passenger,12\nJun,Weather,2";
+let state=loadState();
+
+function loadState(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+function saveState(){localStorage.setItem(KEY,JSON.stringify(state));updateProgress();flash('Saved')}
+function flash(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove('show'),1200)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function cap(s){return s?String(s).charAt(0).toUpperCase()+String(s).slice(1):''}
+
+function hydrate(){
+  document.querySelectorAll('[data-save]').forEach(el=>{
+    if(el.type==='radio'){
+      const k='radio_'+el.name;
+      if(state[k]===el.value)el.checked=true;
+      el.addEventListener('change',()=>{if(el.checked){state[k]=el.value;saveState()}})
+    } else {
+      const k=el.id;
+      if(el.type==='checkbox')el.checked=!!state[k]; else if(state[k]!==undefined)el.value=state[k];
+      el.addEventListener(el.tagName==='SELECT'?'change':'input',()=>{state[k]=el.type==='checkbox'?el.checked:el.value;saveState()});
+      if(el.type==='checkbox')el.addEventListener('change',()=>{state[k]=el.checked;saveState()});
+    }
+  });
+  document.querySelectorAll('[data-complete]').forEach(el=>{
+    const k='done_'+el.dataset.complete;el.checked=!!state[k];
+    el.addEventListener('change',()=>{state[k]=el.checked;saveState()});
+  });
+  renderMetrics();renderScenarios();updateProgress();
+}
+
+function updateProgress(){
+  const all=[...document.querySelectorAll('[data-complete]')],done=all.filter(x=>x.checked).length,pct=all.length?Math.round(done/all.length*100):0;
+  document.getElementById('progressText').textContent=pct+'%';document.getElementById('progressBar').style.width=pct+'%';
+}
+
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.target)?.scrollIntoView({behavior:'smooth',block:'start'}));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.target===e.target.id))}),{rootMargin:'-20% 0px -65% 0px'});
+document.querySelectorAll('.section').forEach(s=>observer.observe(s));
+
+function renderMetrics(){
+  const board=document.getElementById('metricBoard'),list=state.metrics||[];
+  board.innerHTML=list.length?list.map((m,i)=>`<div class="sticky"><button type="button" data-rm="${i}" aria-label="Remove">×</button><strong>${esc(m)}</strong></div>`).join(''):'<div class="small">No metrics added yet.</div>';
+  board.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{list.splice(+b.dataset.rm,1);state.metrics=list;saveState();renderMetrics()});
+}
+document.getElementById('addMetric').onclick=()=>{const i=document.getElementById('metricInput'),v=i.value.trim();if(!v)return i.focus();let list=state.metrics||[];if(list.length>=8)return flash('Keep the list to 8 or fewer');list.push(v);state.metrics=list;i.value='';saveState();renderMetrics();i.focus()};
+document.getElementById('metricInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addMetric').click()});
+
+function renderScenarios(){
+  const host=document.getElementById('scenarioGrid');host.innerHTML=scenarios.map(s=>`<div class="scenario" id="card_${s.id}"><div class="area">${s.id} · ${esc(s.area)}</div><p>${esc(s.text)}</p><label>Classification</label><select id="sel_${s.id}" data-sid="${s.id}"><option value="">Choose</option><option value="descriptive">Descriptive</option><option value="diagnostic">Diagnostic</option><option value="predictive">Predictive</option><option value="prescriptive">Prescriptive</option></select><div class="why" id="why_${s.id}"></div></div>`).join('');
+  scenarios.forEach(s=>{const sel=document.getElementById('sel_'+s.id);sel.value=(state.scenarioSort||{})[s.id]||'';sel.onchange=()=>{state.scenarioSort=state.scenarioSort||{};state.scenarioSort[s.id]=sel.value;saveState();document.getElementById('card_'+s.id).classList.remove('correct','incorrect');document.getElementById('why_'+s.id).classList.remove('show')}});
+}
+document.getElementById('checkScenarios').onclick=()=>{scenarios.forEach(s=>{const val=(state.scenarioSort||{})[s.id]||'',card=document.getElementById('card_'+s.id),why=document.getElementById('why_'+s.id);card.classList.remove('correct','incorrect');card.classList.add(val===s.answer?'correct':'incorrect');why.textContent=`Correct: ${cap(s.answer)}. ${s.why}`;why.classList.add('show')})};
+document.getElementById('clearScenarios').onclick=()=>{state.scenarioSort={};saveState();renderScenarios()};
+
+document.getElementById('checkRightData').onclick=()=>{const ok=!!state.q1&&!state.q2&&!state.q3,fb=document.getElementById('rightDataFeedback');fb.className='feedback show '+(ok?'good':'bad');fb.textContent=ok?'Correct. The monthly division summary can answer Question 1. Questions 2 and 3 require fields that are not in this dataset.':'Recheck the dataset description. Ask what fields would be needed to answer each question.'};
+document.getElementById('checkCharts').onclick=()=>{const ok=state.chart1==='Line Chart'&&state.chart2==='Bar Chart'&&state.chart3==='Scatter Plot',fb=document.getElementById('chartFeedback');fb.className='feedback show '+(ok?'good':'bad');fb.textContent=ok?'Correct. Line = trend over time. Bar = category comparison. Scatter = relationship or correlation.':'Review the purpose of each chart: line for trends, bar for comparisons, scatter for relationships.'};
+
+async function copyText(text){try{await navigator.clipboard.writeText(text);flash('Copied')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();flash('Copied')}}
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyText(document.getElementById(b.dataset.copy).innerText));
+document.getElementById('copySummaryData').onclick=()=>copyText(summaryCSV);
+document.getElementById('copyPromptData').onclick=()=>copyText(document.getElementById('summaryPrompt').innerText+'\n\n'+summaryCSV);
+
+function downloadText(filename,text,type='text/plain'){const blob=new Blob([text],{type:type+';charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
+document.getElementById('downloadPractice').onclick=()=>downloadText('Data_Visualization_Practice_Dataset.csv',practiceCSV,'text/csv');
+
+function val(k){const v=state[k];return v===undefined||v===null?'':(typeof v==='boolean'?(v?'Yes':'No'):String(v))}
+function responsesText(){
+  const L=[],add=(h,arr)=>{L.push(h.toUpperCase());arr.forEach(([lab,k])=>L.push(lab+': '+val(k)));L.push('')};
+  L.push('WMATA DATA VISUALIZATION · PARTICIPANT ACTIVITIES WORKBOOK');
+  L.push('Name: '+val('name'));L.push('Role / Department: '+val('role'));L.push('Group: '+val('group'));L.push('');
+  L.push('1. IDENTIFYING PERFORMANCE MEASURES');L.push('Metrics: '+((state.metrics||[]).join('; ')));L.push('Reflection: '+val('a1_reflect'));L.push('Metric to share: '+val('a1_share'));L.push('');
+  add('2. The Anomaly',[['Selected action','radio_anomaly'],['Rationale','a2_reason']]);
+  L.push('3. SORT THE SCENARIOS');scenarios.forEach(s=>L.push(`${s.id} · ${s.area}: ${cap((state.scenarioSort||{})[s.id]||'')}`));L.push('');
+  add('4. Cleaning the Data',[['Found blank','a4_blank'],['Found duplicate','a4_dup'],['Found outlier','a4_outlier'],['Notes','a4_notes']]);
+  add('5. Is This the Right Data?',[['Question 1 selected','q1'],['Question 2 selected','q2'],['Question 3 selected','q3'],['Reasoning','a5_reason']]);
+  add('6. Match the Message to the Chart',[['Trend','chart1'],['Comparison','chart2'],['Correlation','chart3']]);
+  add('7. Preparing Data for Visualization',[['PivotTable observation','a7_notes']]);
+  add('8. Inserting the Chart',[['Audience takeaway','a8_takeaway']]);
+  add('9. AI Second Opinion',[['AI recommendation','a9_ai'],['My judgment','a9_judge']]);
+  add('10. Spotting the Story',[['Trend observation','a10_trend'],['Comparison observation','a10_compare'],['Outlier observation','a10_outlier']]);
+  add('11. Finding the Headline',[['Headline','a11_headline']]);
+  add('12. AI Summarization',[['First AI response','a12_first'],['Refined prompt / response','a12_refined']]);
+  add('13. Trust, but Verify',[['AI got right','a13_right'],['Needs correction','a13_wrong'],['Missing context','a13_context']]);
+  add('14. Tailoring the Message',[['AI rewrite','a14_ai'],['Final verified version','a14_final'],['Verification notes','a14_verify']]);
+  add('15. Capstone Pitch',[['Finding','a15_finding'],['Evidence','a15_evidence'],['Recommended action','a15_action'],['Pitch outline','a15_pitch']]);
+  add('16. Constructive Review',[['Partner','a16_partner'],['Topic','a16_topic'],['Clarity score','radio_clarityScore'],['Clarity feedback','a16_clarity'],['Visual score','radio_visualScore'],['Visual feedback','a16_visuals'],['Actionability score','radio_actionScore'],['Actionability feedback','a16_action'],['Strongest part','a16_best'],['One improvement','a16_change']]);
+  return L.join('\n');
+}
+
+function jobAidHTML(){
+  const personal=(label,key)=>val(key)?`<div class="personal"><strong>${label}</strong><p>${esc(val(key))}</p></div>`:'';
+  return `<!doctype html><html><head><meta charset="utf-8"><title>My Data Visualization Job Aid</title><style>
+  body{font-family:Aptos,'Segoe UI',Arial,sans-serif;margin:0;color:#183746;background:#eef3f6}main{max-width:900px;margin:0 auto;padding:34px}
+  header{background:#003b52;color:white;border-radius:18px;padding:28px;margin-bottom:18px}header h1{margin:4px 0 6px}header p{margin:0;color:#dbeaf0}
+  .ey{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#f58220;font-weight:900}section{background:white;border-radius:14px;padding:20px 22px;margin:14px 0;border:1px solid #d7e4eb}
+  h2{color:#003b52;margin:0 0 10px}h3{color:#1d6faa;margin:14px 0 5px}p,li{line-height:1.45}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{background:#f5f8fa;border-radius:10px;padding:13px;border:1px solid #d7e4eb}.personal{border-left:4px solid #f58220;background:#fff2e7;padding:10px 12px;margin:8px 0;border-radius:6px}
+  .personal p{margin:4px 0 0}code{display:block;white-space:pre-wrap;background:#eaf4fb;padding:12px;border-radius:8px}@media print{body{background:white}main{padding:0}section,header{break-inside:avoid}}
+  </style></head><body><main>
+  <header><div class="ey">WMATA · Data Visualization</div><h1>My Data Visualization Job Aid</h1><p>${esc(val('name')||'Participant')}${val('role')?' · '+esc(val('role')):''}</p></header>
+  <section><h2>Analytics: Match the Question</h2><div class="grid">
+  <div class="card"><h3>Descriptive</h3><p>What happened?</p></div><div class="card"><h3>Diagnostic</h3><p>Why did it happen?</p></div>
+  <div class="card"><h3>Predictive</h3><p>What is likely to happen?</p></div><div class="card"><h3>Prescriptive</h3><p>What should we do?</p></div></div>
+  ${personal('My anomaly rationale','a2_reason')}
+  </section>
+  <section><h2>Data Quality Quick Check</h2><ol><li>Check for blanks or missing values.</li><li>Look for duplicate records.</li><li>Scan for inconsistent labels or formats.</li><li>Sort to spot unrealistic outliers.</li><li>Confirm the dataset contains the fields needed to answer your question.</li><li>Verify that the data is current enough for the decision.</li></ol>
+  ${personal('What I noticed during cleaning','a4_notes')}${personal('My right-data reasoning','a5_reason')}</section>
+  <section><h2>Choose the Chart by the Message</h2><div class="grid"><div class="card"><h3>Bar Chart</h3><p>Compare categories.</p></div><div class="card"><h3>Line Chart</h3><p>Show trends over time.</p></div><div class="card"><h3>Scatter Plot</h3><p>Explore relationships or correlations.</p></div><div class="card"><h3>Dashboard</h3><p>Combine related views for monitoring and exploration.</p></div></div>
+  <h3>Keep charts honest</h3><p>Use readable labels, remove visual clutter, avoid distorted scales, and make the intended takeaway clear.</p>
+  ${personal('What I want my audience to notice first','a8_takeaway')}</section>
+  <section><h2>Spot the Story</h2><p>Look for sustained trends, meaningful comparisons, and outliers that deserve investigation. A pattern is not automatically a cause.</p>
+  ${personal('My trend observation','a10_trend')}${personal('My comparison observation','a10_compare')}${personal('My outlier observation','a10_outlier')}</section>
+  <section><h2>AI: Use, Then Verify</h2><ul><li>Use only an approved AI tool.</li><li>Do not enter sensitive, personal, or protected data.</li><li>Give AI a role, scope, audience, and output format.</li><li>Verify calculations, interpretations, and recommendations against source data.</li><li>Add the operational context AI does not know.</li></ul>
+  <h3>Chart second-opinion prompt</h3><code>${esc(document.getElementById('chartPrompt').innerText)}</code>
+  <h3>Summarization prompt</h3><code>${esc(document.getElementById('summaryPrompt').innerText)}</code>
+  ${personal('What AI got right','a13_right')}${personal('What needed correction','a13_wrong')}${personal('Context AI was missing','a13_context')}</section>
+  <section><h2>Communicate for Action</h2><p><strong>10-second test:</strong> What is the single sentence your decision-maker needs to hear?</p>
+  <p><strong>Decision-ready message:</strong> Finding + supporting evidence + specific recommended action.</p>
+  ${personal('My headline','a11_headline')}${personal('My final verified rewrite','a14_final')}</section>
+  <section><h2>My Capstone</h2>${personal('Finding','a15_finding')}${personal('Supporting evidence','a15_evidence')}${personal('Recommended action','a15_action')}${personal('Pitch outline','a15_pitch')}</section>
+  <section><h2>Peer Feedback</h2>${personal('Strongest part','a16_best')}${personal('One improvement','a16_change')}</section>
+  <section><h2>Before You Present Data</h2><ol><li>Is the source trustworthy and current?</li><li>Does the dataset answer the question?</li><li>Did I choose the right visual for the message?</li><li>Could the scale, labels, or design mislead?</li><li>Is my takeaway clear in seconds?</li><li>Does my recommendation follow from the evidence?</li><li>If AI helped, did a human verify every important claim?</li></ol></section>
+  </main></body></html>`;
+}
+
+function downloadJobAid(){const nm=(val('name')||'Participant').replace(/[^a-z0-9]+/gi,'_');downloadText(nm+'_Data_Visualization_Job_Aid.html',jobAidHTML(),'text/html');flash('Job aid downloaded')}
+function downloadResponses(){const nm=(val('name')||'Participant').replace(/[^a-z0-9]+/gi,'_');downloadText(nm+'_Data_Visualization_Responses.txt',responsesText());flash('Responses downloaded')}
+
+['jobAidSide','jobAidTop','jobAidBottom'].forEach(id=>document.getElementById(id).onclick=downloadJobAid);
+['responsesSide','responsesBottom'].forEach(id=>document.getElementById(id).onclick=downloadResponses);
+document.getElementById('copyAll').onclick=()=>copyText(responsesText());
+document.getElementById('printSide').onclick=()=>window.print();
+document.getElementById('resetSide').onclick=()=>{if(confirm('Reset this workbook and erase all responses saved in this browser?')){localStorage.removeItem(KEY);location.reload()}};
+
+hydrate();
+</script>
+</body>
+</html>
