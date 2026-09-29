@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Communication Essentials | Challenging Conversation Lab</title>
+<style>
+:root{
+  --navy:#003044;
+  --blue:#2B86C8;
+  --orange:#EA8029;
+  --ink:#1E282C;
+  --muted:#5F7178;
+  --light:#F3F6F7;
+  --mid:#DCE4E8;
+  --white:#FFFFFF;
+  --softblue:#EAF3FA;
+  --softorange:#FFF3E8;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#edf3f6;
+  color:var(--ink);
+  font-family:Calibri,"Segoe UI",Arial,sans-serif;
+}
+button{font:inherit}
+.wrap{max-width:1320px;margin:0 auto;padding:24px}
+.app{
+  background:#fff;
+  border:1px solid #d9e4e9;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,48,68,.14);
+}
+header{
+  background:linear-gradient(135deg,var(--navy),#0b5877);
+  color:#fff;
+  padding:26px 34px 30px;
+  position:relative;
+  overflow:hidden;
+}
+header:after{
+  content:"";
+  position:absolute;
+  width:320px;height:320px;border-radius:50%;
+  right:-110px;top:-120px;
+  border:34px solid rgba(234,128,41,.17);
+}
+.eyebrow{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#ffd1a9;
+  margin-bottom:8px;
+}
+h1{margin:0;font-size:42px;line-height:1.05}
+header p{
+  margin:10px 0 0;
+  max-width:830px;
+  color:#dbeaf1;
+  font-size:18px;
+  line-height:1.45;
+}
+.stagebar{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 28px;
+  border-bottom:1px solid var(--mid);
+  background:#f8fbfc;
+}
+.rounds{display:flex;gap:8px;flex-wrap:wrap}
+.roundpill{
+  border:none;
+  padding:9px 13px;
+  border-radius:999px;
+  background:#e8eef1;
+  color:var(--navy);
+  font-weight:700;
+  cursor:pointer;
+}
+.roundpill.active{background:var(--blue);color:#fff}
+.roundpill.done{background:#dceaf4}
+.stagehint{margin-left:auto;color:var(--muted);font-size:14px}
+main{padding:28px}
+.screen{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);
+  gap:26px;
+  align-items:start;
+}
+@media(max-width:960px){.screen{grid-template-columns:1fr}}
+.scenario{
+  background:linear-gradient(180deg,#f8fbfd,#fff);
+  border:1px solid var(--mid);
+  border-radius:18px;
+  padding:24px;
+}
+.label{
+  display:inline-block;
+  padding:7px 11px;
+  border-radius:999px;
+  background:var(--softblue);
+  color:var(--navy);
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.quote{
+  margin-top:18px;
+  background:#fff;
+  border:1px solid var(--mid);
+  border-left:6px solid var(--orange);
+  border-radius:14px;
+  padding:20px;
+  font-size:24px;
+  line-height:1.35;
+  box-shadow:0 8px 20px rgba(0,48,68,.07);
+}
+.context{
+  margin-top:16px;
+  background:#f2f7f9;
+  border-radius:12px;
+  padding:15px 17px;
+  color:#42525a;
+  line-height:1.45;
+  font-size:15px;
+}
+.discuss{
+  margin-top:20px;
+  background:#fff7ee;
+  border:1px solid #f3d6bb;
+  border-radius:14px;
+  padding:18px;
+}
+.discuss .q{
+  color:var(--navy);
+  font-weight:700;
+  font-size:20px;
+  margin-bottom:8px;
+}
+.discuss .sub{
+  color:#60472f;
+  font-size:15px;
+  line-height:1.45;
+}
+.panel{
+  border:1px solid var(--mid);
+  border-radius:18px;
+  padding:22px;
+  background:#fff;
+}
+.panel h2{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-size:24px;
+}
+.panel p.intro{
+  margin:0 0 16px;
+  color:var(--muted);
+  line-height:1.45;
+}
+.revealarea{display:none}
+.revealarea.show{display:block}
+.responses{display:grid;gap:12px}
+.response{
+  border:2px solid #dde7eb;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+.response button{
+  width:100%;
+  text-align:left;
+  border:none;
+  background:#fff;
+  padding:15px 16px;
+  cursor:pointer;
+  color:var(--ink);
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.response button:hover,.response button:focus-visible{
+  background:#f8fbfd;
+  outline:none;
+}
+.badge{
+  width:30px;height:30px;border-radius:50%;
+  background:#edf5fa;color:var(--navy);
+  display:grid;place-items:center;
+  font-weight:700;flex:0 0 auto;
+}
+.consequence{
+  display:none;
+  padding:0 16px 16px 58px;
+  color:#485860;
+  line-height:1.45;
+  font-size:15px;
+}
+.response.open{
+  border-color:var(--blue);
+  background:#f9fcfe;
+}
+.response.open .consequence{display:block}
+.response.open button{background:#f9fcfe}
+.tradeoff{
+  margin-top:7px;
+  font-size:13px;
+  color:var(--muted);
+  font-style:italic;
+}
+.facilitator{
+  margin-top:18px;
+  border-left:5px solid var(--blue);
+  background:#f3f8fb;
+  padding:14px 16px;
+  border-radius:10px;
+  color:#38505c;
+  font-size:14px;
+  line-height:1.45;
+}
+.controls{
+  display:flex;
+  gap:12px;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:22px;
+  flex-wrap:wrap;
+}
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:13px 17px;
+  cursor:pointer;
+  font-weight:700;
+}
+.btn.primary{background:var(--navy);color:#fff}
+.btn.secondary{background:var(--softblue);color:var(--navy)}
+.btn.orange{background:var(--orange);color:#fff}
+.btn:focus-visible{outline:3px solid rgba(43,134,200,.3);outline-offset:2px}
+.debrief{
+  display:none;
+  margin-top:18px;
+  padding:18px;
+  border-radius:14px;
+  background:#f7fafb;
+  border:1px solid var(--mid);
+}
+.debrief.show{display:block}
+.debrief h3{margin:0 0 8px;color:var(--navy)}
+.debrief ul{margin:8px 0 0 20px;padding:0}
+.debrief li{margin:7px 0;line-height:1.4}
+.footer{
+  padding:14px 28px;
+  background:#f8fbfc;
+  border-top:1px solid var(--mid);
+  color:var(--muted);
+  font-size:13px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="app">
+    <header>
+      <div class="eyebrow">Communication Essentials · Module 4</div>
+      <h1>Challenging Conversation Lab</h1>
+      <p>Use each scenario as a live discussion. Ask participants what they would say first, then reveal several reasonable approaches and compare the tradeoffs.</p>
+    </header>
+
+    <div class="stagebar">
+      <div class="rounds" id="rounds"></div>
+      <div class="stagehint">Facilitator-controlled VILT activity</div>
+    </div>
+
+    <main>
+      <div class="screen">
+        <section class="scenario">
+          <span class="label" id="tactic"></span>
+          <div class="quote" id="quote"></div>
+          <div class="context" id="context"></div>
+
+          <div class="discuss">
+            <div class="q" id="discussionQuestion"></div>
+            <div class="sub" id="discussionSub"></div>
+          </div>
+
+          <div class="debrief" id="debrief">
+            <h3>Debrief</h3>
+            <div id="debriefText"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Compare possible responses</h2>
+          <p class="intro" id="introText">Collect a few responses from the group first. Then reveal these options.</p>
+
+          <button class="btn orange" id="revealBtn">Reveal response options</button>
+
+          <div class="revealarea" id="revealArea">
+            <div class="responses" id="responses"></div>
+
+            <div class="facilitator">
+              Ask: Which response would you choose, and why? What does each one gain? What risk comes with it?
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="btn secondary" id="debriefBtn">Reveal debrief</button>
+            <button class="btn primary" id="nextBtn">Next scenario</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="footer">
+      Tip: There is no score. The value comes from comparing tradeoffs and discussing which response best fits the situation.
+    </div>
+  </div>
+</div>
+
+<script>
+const data = [
+  {
+    title:"Scenario 1",
+    tactic:"Defensive tactic: Scapegoating",
+    quote:"“This is ridiculous. Nobody told me the process changed. If dispatch actually knew what they were doing, we wouldn’t be dealing with this.”",
+    context:"A revised process went into effect this morning. You still need to address the missed step, but the coworker is shifting responsibility to another team.",
+    question:"What would you say next?",
+    sub:"Listen for responses that acknowledge the frustration without getting pulled into the blame.",
+    responses:[
+      {
+        text:"“I can see why that would be frustrating. Let’s figure out where the handoff broke down so we can keep this from happening again.”",
+        consequence:"This validates the frustration and moves toward shared problem-solving.",
+        tradeoff:"Strength: lowers defensiveness. Risk: may spend more time on the breakdown than on the immediate correction."
+      },
+      {
+        text:"“Dispatch should have communicated the change more clearly, but we still need to work with the process that’s in place now.”",
+        consequence:"This acknowledges the communication failure and still reinforces the current requirement.",
+        tradeoff:"Strength: practical and direct. Risk: reinforces the blame frame by agreeing that dispatch is at fault."
+      },
+      {
+        text:"“Let’s separate the communication issue from what needs to happen next. What part of the new process caused the problem?”",
+        consequence:"This redirects quickly to facts and the specific point of failure.",
+        tradeoff:"Strength: efficient and task-focused. Risk: may feel abrupt if the coworker first needs to feel heard."
+      }
+    ],
+    debrief:[
+      "All three responses have a legitimate strength.",
+      "The strongest choice depends on what the conversation needs first: acknowledgment, clarity, or rapid redirection.",
+      "The key is to avoid joining the blame while still addressing the work."
+    ]
+  },
+  {
+    title:"Scenario 2",
+    tactic:"Defensive tactic: Put-down",
+    quote:"“If you actually understood how this work gets done, you wouldn’t be asking me to redo it.”",
+    context:"The coworker has shifted from disagreement into a personal jab. The work still needs to be corrected before the next shift.",
+    question:"What needs to happen here before you address the work itself?",
+    sub:"Listen for the need to maintain a boundary while keeping the conversation productive.",
+    responses:[
+      {
+        text:"“I do understand the process. The issue I’m raising is that two required entries are missing from the log.”",
+        consequence:"This corrects the personal challenge and immediately returns to the specific issue.",
+        tradeoff:"Strength: factual and clear. Risk: defending your own credibility may keep the personal contest alive."
+      },
+      {
+        text:"“Let’s keep this focused on the work. Two required entries are missing, and we need to get those completed before the next shift.”",
+        consequence:"This sets a boundary without arguing about competence and redirects to the task.",
+        tradeoff:"Strength: calm, direct, and efficient. Risk: may not surface why the coworker disagrees."
+      },
+      {
+        text:"“I hear that you disagree with the request. Walk me through why you believe those entries aren’t needed.”",
+        consequence:"This invites explanation and may reveal a real process concern.",
+        tradeoff:"Strength: opens dialogue. Risk: may reward or prolong the personal tone if the boundary is not addressed."
+      }
+    ],
+    debrief:[
+      "A useful response protects both the relationship and the work.",
+      "You do not have to accept a personal jab to remain professional.",
+      "A boundary can be brief, then the conversation should return to facts."
+    ]
+  },
+  {
+    title:"Scenario 3",
+    tactic:"Defensive tactic: Stonewalling",
+    quote:"“Whatever. I already told you what happened. I’m not talking about this anymore.”",
+    context:"The coworker is shutting down. You need enough information to prevent the same handoff problem on the next shift.",
+    question:"What is your goal at this point?",
+    sub:"Listen for answers that reduce pressure while still protecting the need for information.",
+    responses:[
+      {
+        text:"“Okay. Let’s take a few minutes and come back to this when we’re both ready to finish the conversation.”",
+        consequence:"This creates space and may lower the emotional temperature.",
+        tradeoff:"Strength: avoids a power struggle. Risk: the conversation may be delayed or never fully resolved."
+      },
+      {
+        text:"“I won’t keep going over the same ground. I do need one piece before we stop. What information was missing at handoff?”",
+        consequence:"This narrows the request and makes it easier for the coworker to re-engage.",
+        tradeoff:"Strength: protects forward motion without forcing the whole conversation. Risk: you may leave broader issues for later."
+      },
+      {
+        text:"“I understand you’re done discussing it. I’ll document what we have and follow up if anything else is needed.”",
+        consequence:"This respects the boundary and preserves a record of the conversation.",
+        tradeoff:"Strength: de-escalates quickly. Risk: unresolved information may carry forward into the next shift."
+      }
+    ],
+    debrief:[
+      "Stonewalling often gets worse when the other person feels trapped.",
+      "You may need to reduce the size of the request rather than force the full conversation.",
+      "The goal is enough forward motion to protect the work, not total resolution in one exchange."
+    ]
+  }
+];
+
+let current=0;
+const roundsEl=document.getElementById("rounds");
+const tactic=document.getElementById("tactic");
+const quote=document.getElementById("quote");
+const context=document.getElementById("context");
+const discussionQuestion=document.getElementById("discussionQuestion");
+const discussionSub=document.getElementById("discussionSub");
+const revealBtn=document.getElementById("revealBtn");
+const revealArea=document.getElementById("revealArea");
+const responses=document.getElementById("responses");
+const debrief=document.getElementById("debrief");
+const debriefText=document.getElementById("debriefText");
+const debriefBtn=document.getElementById("debriefBtn");
+const nextBtn=document.getElementById("nextBtn");
+
+function buildRoundButtons(){
+  roundsEl.innerHTML="";
+  data.forEach((d,i)=>{
+    const b=document.createElement("button");
+    b.className="roundpill"+(i===current?" active":"");
+    b.textContent=d.title;
+    b.addEventListener("click",()=>{current=i;render()});
+    roundsEl.appendChild(b);
+  });
+}
+function render(){
+  const d=data[current];
+  tactic.textContent=d.tactic;
+  quote.textContent=d.quote;
+  context.textContent=d.context;
+  discussionQuestion.textContent=d.question;
+  discussionSub.textContent=d.sub;
+  revealArea.classList.remove("show");
+  debrief.classList.remove("show");
+  revealBtn.textContent="Reveal response options";
+  debriefBtn.textContent="Reveal debrief";
+  responses.innerHTML="";
+  d.responses.forEach((r,i)=>{
+    const box=document.createElement("div");
+    box.className="response";
+    const button=document.createElement("button");
+    button.innerHTML=`<span class="badge">${String.fromCharCode(65+i)}</span><span>${r.text}</span>`;
+    const c=document.createElement("div");
+    c.className="consequence";
+    c.innerHTML=`<div>${r.consequence}</div><div class="tradeoff">${r.tradeoff}</div>`;
+    button.addEventListener("click",()=>box.classList.toggle("open"));
+    box.appendChild(button);
+    box.appendChild(c);
+    responses.appendChild(box);
+  });
+  debriefText.innerHTML="<ul>"+d.debrief.map(x=>`<li>${x}</li>`).join("")+"</ul>";
+  nextBtn.textContent=current===data.length-1?"Back to first scenario":"Next scenario";
+  buildRoundButtons();
+}
+revealBtn.addEventListener("click",()=>{
+  const isOpen=revealArea.classList.toggle("show");
+  revealBtn.textContent=isOpen?"Hide response options":"Reveal response options";
+});
+debriefBtn.addEventListener("click",()=>{
+  const isOpen=debrief.classList.toggle("show");
+  debriefBtn.textContent=isOpen?"Hide debrief":"Reveal debrief";
+});
+nextBtn.addEventListener("click",()=>{
+  current=(current+1)%data.length;
+  render();
+});
+render();
+</script>
+</body>
+</html>
