@@ -7,7 +7,7 @@ window.C2Course={
  "subtitle": "Virtual instructor-led · 90 minutes",
  "source": "M3_Communication_Styles_and_Adaptability_VILT.pptx",
  "storageKey": "c2hub_m3_commstyles_v2",
- "workbookUrl": "../M3_Communication_Styles_Participant_eWorkbook/index.html",
+ "workbookUrl": "participant-eworkbook/index.html",
  "modules": [
   "Before class",
   "Opening and relevance",
