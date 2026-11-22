@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Instructor Hub · M3. Communication Styles and Adaptability</title>
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body class="console">
+<a class="skip" href="#main">Skip to slide controls</a>
+<div class="ins-app">
+  <header class="topbar">
+    <div class="brand"><img class="brand-mark cobrand" src="assets/brand/avani-c2-logo.png" alt="Avani Services and C² Technologies"><div><div class="eyebrow">Private instructor console</div><strong>M3. Communication Styles and Adaptability</strong></div></div>
+    <div class="tools">
+      <span class="pill" id="display-state" role="status">Participant display not open</span>
+      <button type="button" id="open-display" class="primary">Open participant display</button>
+      <button type="button" id="open-workbook">Participant eWorkbook</button>
+      <button type="button" id="layout-toggle" aria-pressed="false">Compact layout</button>
+      <button type="button" id="help">Help</button>
+    </div>
+  </header>
+  <div class="ins-grid">
+    <aside class="rail" id="rail" aria-label="Slide menu">
+      <div class="rail-head"><span class="rail-title">Slides</span><button type="button" id="rail-toggle" class="rail-btn" aria-controls="rail-body" aria-expanded="true" aria-label="Collapse slide menu" title="Collapse slide menu (\)">«</button><span class="rail-strip-num" id="rail-num" aria-hidden="true"></span></div>
+      <div id="rail-body" class="rail-body">
+        <div class="field"><label for="search">Find a slide</label><input id="search" type="search" placeholder="Number or title" autocomplete="off"></div>
+        <nav id="slide-nav" aria-label="Slide list"></nav>
+        <p class="tiny muted rail-foot">Private content stays in this console. When you present, share only the participant display window. Press <kbd>\</kbd> to collapse or expand this menu.</p>
+      </div>
+    </aside>
+    <main class="main-pane" id="main">
+      <div class="slide-head">
+        <div class="slide-head-text"><span class="eyebrow" id="cur-module"></span><h1 id="cur-title"></h1></div>
+        <span class="pill" id="cur-time"></span>
+      </div>
+      <div class="clocks" aria-label="Session timing">
+        <span><span class="tiny muted">Session</span> <b class="mono" id="session-clock">0:00:00</b> <button type="button" class="small" id="session-toggle">Start</button><button type="button" class="small" id="session-reset" aria-label="Reset session clock">Reset</button></span>
+        <span><span class="tiny muted">On this slide</span> <b class="mono" id="slide-clock">0:00</b></span>
+        <span class="tiny muted" id="plan-info"></span>
+      </div>
+      <div class="stage preview" id="preview" aria-label="Preview of the participant display"></div>
+      <div class="nav-row">
+        <button type="button" id="prev-slide" aria-keyshortcuts="Shift+ArrowLeft">← Previous slide</button>
+        <button type="button" id="back" aria-keyshortcuts="ArrowLeft PageUp">Back</button>
+        <button type="button" id="advance" class="primary big" aria-keyshortcuts="ArrowRight PageDown Space">Advance →</button>
+        <button type="button" id="next-slide">Next slide →</button>
+        <span class="divider" aria-hidden="true"></span>
+        <button type="button" id="prev-reveal">Previous reveal</button>
+        <button type="button" id="next-reveal" class="accent">Next reveal</button>
+        <span id="reveal-status" class="status"></span>
+        <button type="button" id="blank-toggle" aria-pressed="false">Blank whiteboard</button>
+      </div>
+      <p class="tiny muted keyhint">Advance (→, Page Down, Space, or a presenter remote) works like a click in PowerPoint: it plays the next reveal, then moves to the next slide. Press <kbd>\</kbd> to collapse or expand the slide menu.</p>
+      <section class="block" id="ink-toolbar" aria-label="Slide annotations"></section>
+      <section class="block" aria-labelledby="tools-h"><h2 id="tools-h" class="block-h">This slide</h2><div id="slide-tools"></div></section>
+      <details class="block" open>
+        <summary>Activity timer</summary>
+        <div class="timer-row">
+          <div class="field inline"><label for="timer-min">Minutes</label><input id="timer-min" type="number" min="1" max="90" value="3"></div>
+          <div class="field inline"><label for="timer-label">Label (optional)</label><input id="timer-label" maxlength="30" placeholder="Chat"></div>
+          <button type="button" class="small" id="timer-use-slide">Use slide time</button>
+        </div>
+        <div class="tools"><button type="button" id="timer-start" class="accent">Start</button><button type="button" id="timer-reset">Reset</button><b class="mono timer-readout" id="timer-readout">0:00</b>
+          <label class="check"><input type="checkbox" id="timer-show"> Show on participant display</label></div>
+      </details>
+      <details class="block">
+        <summary>Saved work</summary>
+        <p class="tiny muted">Annotations, whiteboard responses, and settings are kept in this browser only. Download a session file if you want to keep them.</p>
+        <div class="button-row"><button type="button" id="export-state">Download session file</button><button type="button" id="import-state">Open session file</button><input type="file" id="state-file" accept=".json" hidden><button type="button" id="reset-state" class="warn">Clear session work</button></div>
+      </details>
+      <details class="block">
+        <summary>Instructor resources</summary>
+        <div class="button-row">
+          <a class="button" href="downloads/instructor-setup-guide.html" target="_blank" rel="noopener">Setup guide and Teams sharing</a>
+          <a class="button" href="downloads/printable-instructor-notes.html" target="_blank" rel="noopener">Printable instructor notes</a>
+          <a class="button" href="downloads/chat-paste-text.html" target="_blank" rel="noopener">All chat text</a>
+          <a class="button" href="downloads/M3_Communication_Styles_and_Adaptability_VILT.pptx" download>Source PowerPoint (backup)</a>
+        </div>
+        <p class="tiny muted">If the hub fails, present the PowerPoint from the backup and use the printable notes.</p>
+      </details>
+    </main>
+    <aside class="notes-pane" aria-labelledby="notes-title">
+      <div class="notes-top">
+        <div><div class="eyebrow">Private speaker notes</div><h2 id="notes-title"></h2></div>
+        <div class="tools"><button type="button" class="small" id="notes-smaller" aria-label="Smaller notes text">A−</button><button type="button" class="small" id="notes-larger" aria-label="Larger notes text">A+</button></div>
+      </div>
+      <details class="mynotes" id="my-notes">
+        <summary><span class="mn-dot" aria-hidden="true"></span><span class="mn-label">My notes</span><span class="mn-sum" id="mn-sum">Add a private note for this slide</span></summary>
+        <div class="mn-body">
+          <p class="tiny muted">Private to you. Saved in this browser and never shown on the participant display. Use it for reminders or to suggest revisions.</p>
+          <div class="mn-row"><label for="mn-type">Type</label><select id="mn-type"></select><span class="tiny muted" id="mn-slide"></span></div>
+          <label for="mn-text" class="sr-only">My note for this slide</label>
+          <textarea id="mn-text" rows="4" placeholder="Type a reminder, or a change you’d suggest for this slide…"></textarea>
+          <div class="mn-foot"><span class="tiny muted" id="mn-saved" aria-live="polite"></span><button type="button" class="small warn" id="mn-delete">Delete note</button></div>
+          <div class="mn-all">
+            <p class="tiny" id="mn-count">No slides have notes yet.</p>
+            <div class="button-row"><button type="button" class="small accent" id="mn-print">Print or save as PDF</button><button type="button" class="small" id="mn-csv">Download spreadsheet</button><button type="button" class="small" id="mn-backup">Back up notes</button><button type="button" class="small" id="mn-restore">Restore notes</button><input type="file" id="mn-file" accept=".json" hidden></div>
+          </div>
+        </div>
+      </details>
+      <div id="notes-body" class="notes-body"></div>
+      <div id="up-next"></div>
+      <div class="notice"><strong>Sharing:</strong> in Teams or your meeting platform, share only the participant display window, not your screen. This panel never appears in that window.</div>
+    </aside>
+  </div>
+</div>
+<div id="live-status" class="sr-only" aria-live="polite"></div>
+<script src="assets/course/course.js"></script>
+<script src="assets/course/course-private.js"></script>
+<script src="assets/engine/sync.js"></script>
+<script src="assets/engine/annotation.js"></script>
+<script src="assets/engine/stage.js"></script>
+<script src="assets/engine/my-notes.js"></script>
+<script src="assets/engine/instructor.js"></script>
+<script src="assets/engine/annotation-controls.js"></script>
+</body>
+</html>
