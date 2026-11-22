@@ -1,18 +1,55 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>M3. Communication Styles and Adaptability · C² Instructor Hub</title><link rel="stylesheet" href="assets/hub.css"></head>
-<body><main class="launch">
-<div class="brand"><img class="brand-mark cobrand" src="assets/brand/avani-c2-logo.png" alt="Avani Services and C² Technologies"><div><div class="eyebrow">C² Instructor Hub · Instructor-only package</div><strong>M3. Communication Styles and Adaptability</strong></div></div>
-<h1 style="margin-top:22px">Virtual instructor-led · 90 minutes · 38 slides</h1>
-<p>Run the whole session from the private instructor console. Open the participant display from the console, then share only that window in Teams or your meeting platform.</p>
-<section class="card launch-video" aria-labelledby="walkthrough-title">
-<video controls preload="none" playsinline poster="assets/training/instructor-hub-walkthrough-poster.jpg" aria-describedby="walkthrough-desc"><source src="assets/training/instructor-hub-walkthrough.mp4" type="video/mp4">Your browser can’t play this video. <a href="assets/training/instructor-hub-walkthrough.mp4">Download the walkthrough</a>.</video>
-<div><div class="eyebrow">New to the hub? Start here</div><h2 id="walkthrough-title">Watch the 5-minute walkthrough</h2><p class="muted" id="walkthrough-desc">See how to open both windows, share safely, move through slides and reveals, and use each console tool. Captions are on screen.</p><p class="tiny"><a href="assets/training/instructor-hub-walkthrough-transcript.html">Read the transcript</a> · <a href="assets/training/instructor-hub-walkthrough.mp4" download>Download the video</a></p></div>
-</section>
-<div class="launch-grid">
-<section class="card"><h2>1. Instructor console</h2><p class="muted">Slides, reveals, full speaker notes, chat text, media controls, timers, and annotations.</p><a class="button primary" href="instructor.html">Open the instructor console</a></section>
-<section class="card"><h2>2. Participant display</h2><p class="muted">Open it from the console with <b>Open participant display</b> so the two windows stay in sync.</p></section>
-<section class="card"><h2>Before you teach</h2><p class="muted">One- and two-monitor setup, Teams window and sound sharing, and fallbacks.</p><a class="button" href="downloads/instructor-setup-guide.html">Setup guide</a></section>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>eWorkbook · M3. Communication Styles and Adaptability</title>
+<link rel="stylesheet" href="assets/workbook.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="wb-top">
+  <div class="brand"><img class="brand-logo" src="assets/brand/avani-c2-logo.png" alt="Avani Services and C² Technologies"><div><div class="eyebrow">Participant eWorkbook · Notes &amp; Activities</div><strong>M3. Communication Styles and Adaptability</strong></div></div>
+  <div class="tools no-print">
+    <button type="button" id="dl-backup" class="primary">Download backup</button>
+    <button type="button" id="restore-btn">Restore backup</button><input type="file" id="restore-file" accept=".json,application/json" hidden>
+    <button type="button" id="export-notes">Export my notes</button>
+    <button type="button" id="print-wb">Print / PDF</button>
+  </div>
+</header>
+<div class="wb-layout">
+  <nav class="wb-side no-print" id="wb-side" aria-label="eWorkbook contents">
+    <div class="side-head">
+      <span class="eyebrow">Contents</span>
+      <button type="button" class="rail-toggle" id="side-toggle" aria-controls="side-body" aria-expanded="true" title="Collapse the menu"><span aria-hidden="true">«</span><span class="sr-only" id="side-toggle-label">Collapse menu</span></button>
+    </div>
+    <div class="side-body" id="side-body">
+      <label class="side-label" for="wb-search">Find a slide</label>
+      <input id="wb-search" type="search" placeholder="Number or title" autocomplete="off">
+      <div class="nav-group">Activities</div>
+      <div id="wb-acts"></div>
+      <div id="wb-nav"></div>
+    </div>
+  </nav>
+  <main id="main" class="wb-main" tabindex="-1">
+    <div class="page intro">
+      <h1>Your course notebook</h1>
+      <p>Every slide is here. Type notes beside each one; they save automatically in this browser. Your work isn’t sent to the instructor. Before you leave, download a backup, export your notes, or print to PDF.</p>
+      <p class="save-state" id="save-state" role="status" aria-live="polite"></p>
+    </div>
+    <div class="wb-tabs no-print" role="tablist" aria-label="eWorkbook sections">
+      <button type="button" role="tab" id="tab-notes" aria-controls="pane-notes" aria-selected="true">Course notes</button>
+      <button type="button" role="tab" id="tab-activities" aria-controls="pane-activities" aria-selected="false" tabindex="-1">Activities &amp; resources</button>
+    </div>
+    <section id="pane-notes" role="tabpanel" aria-labelledby="tab-notes"><div id="note-pages"></div></section>
+    <section id="pane-activities" role="tabpanel" aria-labelledby="tab-activities" hidden><div id="activity-pages"></div></section>
+  </main>
 </div>
-<p class="tiny muted" style="margin-top:24px">Open this hub from its web address. Double-clicking the HTML files won’t keep the two windows in sync.</p>
-</main></body></html>
+<dialog id="lightbox" class="wb-lightbox" aria-labelledby="lightbox-title">
+  <div class="lb-head"><strong id="lightbox-title"></strong><div class="tools"><button type="button" id="lb-prev">← Previous</button><button type="button" id="lb-next">Next →</button><button type="button" id="lb-close" class="primary">Close</button></div></div>
+  <div id="lightbox-stage" class="lb-stage"></div>
+</dialog>
+<script src="assets/course/workbook-data.js"></script>
+<script src="assets/course/activities.js"></script>
+<script src="assets/workbook.js"></script>
+</body>
+</html>
