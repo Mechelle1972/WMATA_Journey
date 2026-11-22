@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Participant display · AI Essentials: Start Smart</title>
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body class="display">
+<!-- Participant-facing window. Loads public course data only. Do not add course-private.js. -->
+<div class="display-app">
+  <div class="display-top">
+    <span id="display-status" role="status">Connecting…</span>
+    <span class="tools">
+      <button type="button" id="media-ready" class="small">Enable sound and video</button>
+      <button type="button" id="display-fullscreen" class="small">Enter full screen</button>
+    </span>
+  </div>
+  <div class="display-frame"><div class="stage" id="stage" aria-live="polite"></div></div>
+</div>
+<button type="button" id="media-gate" class="media-gate" hidden>▶ Play</button>
+<audio id="audio-player" preload="auto"></audio>
+<script src="assets/course/course.js"></script>
+<script src="assets/engine/sync.js"></script>
+<script src="assets/engine/annotation.js"></script>
+<script src="assets/engine/stage.js"></script>
+<script src="assets/engine/display.js"></script>
+</body>
+</html>
