@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Participant eWorkbook</title><link rel="stylesheet" href="assets/workbook.css"></head><body class="wb">
+<header class="topbar no-print"><div class="brand"><img class="brand-mark" src="assets/brand-mark.png" alt="Xcel Energy"><div><div class="eyebrow">Participant-only resource</div><strong id="wb-course">Course</strong></div></div><div class="tools"><button type="button" id="save-responses" class="primary">Download backup</button><button type="button" id="export-notes">Export my notes</button><button type="button" id="import-responses">Restore backup</button><input type="file" id="file-import" accept=".json" hidden><button type="button" id="print-workbook">Print / PDF</button></div></header>
+<div class="wb-app">
+<aside class="wb-side no-print" aria-label="Slide menu">
+  <div class="side-head"><span class="side-title">Slides</span><button type="button" id="side-toggle" class="side-btn" aria-controls="side-body" aria-expanded="true" aria-label="Collapse slide menu" title="Collapse slide menu">«</button></div>
+  <div id="side-body" class="side-body"><label for="notes-search" class="sr-only">Search slides</label><input id="notes-search" class="wb-search" type="search" placeholder="Find a slide by number or title"><nav id="notes-nav" aria-label="Slides"></nav></div>
+</aside>
+<main class="workbook"><h1>Your course notebook</h1><p>Take notes beside each slide and complete the activities. Your work stays in this browser until you download or print it. Nothing is sent to the instructor.</p>
+<div class="wb-tabs no-print" role="tablist" aria-label="Workbook sections"><button type="button" id="tab-notes" role="tab" aria-selected="true" aria-controls="pane-notes">Course notes</button><button type="button" id="tab-activities" role="tab" aria-selected="false" aria-controls="pane-activities">Activities &amp; resources</button></div>
+<section id="pane-notes" role="tabpanel" aria-labelledby="tab-notes"><div id="note-pages"></div></section>
+<section id="pane-activities" role="tabpanel" aria-labelledby="tab-activities" hidden><nav class="workbook-nav no-print" id="activity-nav" aria-label="Activities"></nav><div id="workbook-pages"></div></section>
+<p class="muted tiny">Slide previews show what participants see at the start of each slide. Answers are not included.</p></main>
+</div>
+<dialog id="slide-lightbox" class="wb-lightbox" aria-labelledby="lightbox-title"><div class="wb-modal-header"><strong id="lightbox-title"></strong><button type="button" id="close-lightbox">Close</button></div><div id="lightbox-stage" class="wb-modal-slide"></div></dialog>
+<script src="assets/workbook-data.js"></script><script src="assets/workbook.js"></script></body></html>
